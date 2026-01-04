@@ -2,7 +2,7 @@
 
 set -e
 
-# Parse command line arguments
+# 解析命令行参数
 JSON_MODE=false
 ARGS=()
 
@@ -12,9 +12,9 @@ for arg in "$@"; do
             JSON_MODE=true 
             ;;
         --help|-h) 
-            echo "Usage: $0 [--json]"
-            echo "  --json    Output results in JSON format"
-            echo "  --help    Show this help message"
+            echo "用法：$0 [--json]"
+            echo "  --json    以 JSON 格式输出结果"
+            echo "  --help    显示帮助信息"
             exit 0 
             ;;
         *) 
@@ -23,31 +23,31 @@ for arg in "$@"; do
     esac
 done
 
-# Get script directory and load common functions
+# 获取脚本目录并加载共用函数
 SCRIPT_DIR="$(CDPATH="" cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/common.sh"
 
-# Get all paths and variables from common functions
+# 从共用函数获取所有路径与变量
 eval $(get_feature_paths)
 
-# Check if we're on a proper feature branch (only for git repos)
+# 检查是否处于正确的 feature 分支（仅对 git 仓库执行）
 check_feature_branch "$CURRENT_BRANCH" "$HAS_GIT" || exit 1
 
-# Ensure the feature directory exists
+# 确保 feature 目录存在
 mkdir -p "$FEATURE_DIR"
 
-# Copy plan template if it exists
+# 若存在 plan 模板则复制
 TEMPLATE="$REPO_ROOT/.specify/templates/plan-template.md"
 if [[ -f "$TEMPLATE" ]]; then
     cp "$TEMPLATE" "$IMPL_PLAN"
-    echo "Copied plan template to $IMPL_PLAN"
+    echo "已将 plan 模板复制到 $IMPL_PLAN"
 else
-    echo "Warning: Plan template not found at $TEMPLATE"
-    # Create a basic plan file if template doesn't exist
+    echo "警告：未在 $TEMPLATE 找到 plan 模板"
+    # 若模板不存在则创建一个空的 plan 文件
     touch "$IMPL_PLAN"
 fi
 
-# Output results
+# 输出结果
 if $JSON_MODE; then
     printf '{"FEATURE_SPEC":"%s","IMPL_PLAN":"%s","SPECS_DIR":"%s","BRANCH":"%s","HAS_GIT":"%s"}\n' \
         "$FEATURE_SPEC" "$IMPL_PLAN" "$FEATURE_DIR" "$CURRENT_BRANCH" "$HAS_GIT"

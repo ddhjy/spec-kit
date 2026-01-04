@@ -53,10 +53,10 @@ $ARGUMENTS
 2. **生成并分发调研任务**：
 
    ```text
-   For each unknown in Technical Context:
-     Task: "Research {unknown} for {feature context}"
-   For each technology choice:
-     Task: "Find best practices for {tech} in {domain}"
+   对 Technical Context 中的每个未知项：
+     任务："调研 {unknown}（结合 {feature context}）"
+   对每个技术选型：
+     任务："查找 {domain} 中 {tech} 的最佳实践"
    ```
 
 3. **在 `research.md` 中汇总结论**，按如下格式：

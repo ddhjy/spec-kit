@@ -1,18 +1,18 @@
 #!/usr/bin/env pwsh
 
-# Consolidated prerequisite checking script (PowerShell)
+# 统一的前置条件检查脚本（PowerShell）
 #
-# This script provides unified prerequisite checking for Spec-Driven Development workflow.
-# It replaces the functionality previously spread across multiple scripts.
+# 本脚本为规格驱动开发（SDD）工作流提供统一的前置条件检查。
+# 它替代了此前分散在多个脚本中的同类功能。
 #
-# Usage: ./check-prerequisites.ps1 [OPTIONS]
+# 用法：./check-prerequisites.ps1 [OPTIONS]
 #
-# OPTIONS:
-#   -Json               Output in JSON format
-#   -RequireTasks       Require tasks.md to exist (for implementation phase)
-#   -IncludeTasks       Include tasks.md in AVAILABLE_DOCS list
-#   -PathsOnly          Only output path variables (no validation)
-#   -Help, -h           Show help message
+# OPTIONS：
+#   -Json               以 JSON 格式输出
+#   -RequireTasks       要求 tasks.md 存在（实现阶段使用）
+#   -IncludeTasks       在 AVAILABLE_DOCS 列表中包含 tasks.md
+#   -PathsOnly          仅输出路径变量（不做校验）
+#   -Help, -h           显示帮助信息
 
 [CmdletBinding()]
 param(
@@ -25,45 +25,45 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-# Show help if requested
+# 若请求则显示帮助
 if ($Help) {
     Write-Output @"
-Usage: check-prerequisites.ps1 [OPTIONS]
+用法：check-prerequisites.ps1 [OPTIONS]
 
-Consolidated prerequisite checking for Spec-Driven Development workflow.
+用于规格驱动开发（SDD）工作流的统一前置条件检查。
 
-OPTIONS:
-  -Json               Output in JSON format
-  -RequireTasks       Require tasks.md to exist (for implementation phase)
-  -IncludeTasks       Include tasks.md in AVAILABLE_DOCS list
-  -PathsOnly          Only output path variables (no prerequisite validation)
-  -Help, -h           Show this help message
+OPTIONS：
+  -Json               以 JSON 格式输出
+  -RequireTasks       要求 tasks.md 存在（实现阶段使用）
+  -IncludeTasks       在 AVAILABLE_DOCS 列表中包含 tasks.md
+  -PathsOnly          仅输出路径变量（不做前置条件校验）
+  -Help, -h           显示帮助信息
 
-EXAMPLES:
-  # Check task prerequisites (plan.md required)
+示例（EXAMPLES）：
+  # 检查任务生成前置条件（需要 plan.md）
   .\check-prerequisites.ps1 -Json
   
-  # Check implementation prerequisites (plan.md + tasks.md required)
+  # 检查实现阶段前置条件（需要 plan.md + tasks.md）
   .\check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks
   
-  # Get feature paths only (no validation)
+  # 仅获取 feature 路径（不做校验）
   .\check-prerequisites.ps1 -PathsOnly
 
 "@
     exit 0
 }
 
-# Source common functions
+# 引入共用函数
 . "$PSScriptRoot/common.ps1"
 
-# Get feature paths and validate branch
+# 获取 feature 路径并校验分支
 $paths = Get-FeaturePathsEnv
 
 if (-not (Test-FeatureBranch -Branch $paths.CURRENT_BRANCH -HasGit:$paths.HAS_GIT)) { 
     exit 1 
 }
 
-# If paths-only mode, output paths and exit (support combined -Json -PathsOnly)
+# 若为仅路径模式：输出路径并退出（支持 -Json 与 -PathsOnly 同时启用）
 if ($PathsOnly) {
     if ($Json) {
         [PSCustomObject]@{
@@ -85,58 +85,58 @@ if ($PathsOnly) {
     exit 0
 }
 
-# Validate required directories and files
+# 校验必需目录与文件
 if (-not (Test-Path $paths.FEATURE_DIR -PathType Container)) {
-    Write-Output "ERROR: Feature directory not found: $($paths.FEATURE_DIR)"
-    Write-Output "Run /speckit.specify first to create the feature structure."
+    Write-Output "错误：未找到 feature 目录：$($paths.FEATURE_DIR)"
+    Write-Output "请先运行 /speckit.specify 创建 feature 结构。"
     exit 1
 }
 
 if (-not (Test-Path $paths.IMPL_PLAN -PathType Leaf)) {
-    Write-Output "ERROR: plan.md not found in $($paths.FEATURE_DIR)"
-    Write-Output "Run /speckit.plan first to create the implementation plan."
+    Write-Output "错误：在 $($paths.FEATURE_DIR) 中未找到 plan.md"
+    Write-Output "请先运行 /speckit.plan 创建实现计划。"
     exit 1
 }
 
-# Check for tasks.md if required
+# 若需要则检查 tasks.md
 if ($RequireTasks -and -not (Test-Path $paths.TASKS -PathType Leaf)) {
-    Write-Output "ERROR: tasks.md not found in $($paths.FEATURE_DIR)"
-    Write-Output "Run /speckit.tasks first to create the task list."
+    Write-Output "错误：在 $($paths.FEATURE_DIR) 中未找到 tasks.md"
+    Write-Output "请先运行 /speckit.tasks 创建任务清单。"
     exit 1
 }
 
-# Build list of available documents
+# 构建可用文档列表
 $docs = @()
 
-# Always check these optional docs
+# 始终检查这些可选文档
 if (Test-Path $paths.RESEARCH) { $docs += 'research.md' }
 if (Test-Path $paths.DATA_MODEL) { $docs += 'data-model.md' }
 
-# Check contracts directory (only if it exists and has files)
+# 检查 contracts 目录（仅当存在且非空时）
 if ((Test-Path $paths.CONTRACTS_DIR) -and (Get-ChildItem -Path $paths.CONTRACTS_DIR -ErrorAction SilentlyContinue | Select-Object -First 1)) { 
     $docs += 'contracts/' 
 }
 
 if (Test-Path $paths.QUICKSTART) { $docs += 'quickstart.md' }
 
-# Include tasks.md if requested and it exists
+# 若请求包含且文件存在，则加入 tasks.md
 if ($IncludeTasks -and (Test-Path $paths.TASKS)) { 
     $docs += 'tasks.md' 
 }
 
-# Output results
+# 输出结果
 if ($Json) {
-    # JSON output
+    # JSON 输出
     [PSCustomObject]@{ 
         FEATURE_DIR = $paths.FEATURE_DIR
         AVAILABLE_DOCS = $docs 
     } | ConvertTo-Json -Compress
 } else {
-    # Text output
+    # 文本输出
     Write-Output "FEATURE_DIR:$($paths.FEATURE_DIR)"
     Write-Output "AVAILABLE_DOCS:"
     
-    # Show status of each potential document
+    # 显示各潜在文档的状态
     Test-FileExists -Path $paths.RESEARCH -Description 'research.md' | Out-Null
     Test-FileExists -Path $paths.DATA_MODEL -Description 'data-model.md' | Out-Null
     Test-DirHasFiles -Path $paths.CONTRACTS_DIR -Description 'contracts/' | Out-Null

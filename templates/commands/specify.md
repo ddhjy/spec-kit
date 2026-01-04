@@ -34,10 +34,10 @@ $ARGUMENTS
    - 保留技术术语与缩写（OAuth2、API、JWT 等）
    - 保持简短，但要足够表达含义，让人一眼能看出是什么功能
    - 示例：
-     - "I want to add user authentication" → "user-auth"
-     - "Implement OAuth2 integration for the API" → "oauth2-api-integration"
-     - "Create a dashboard for analytics" → "analytics-dashboard"
-     - "Fix payment processing timeout bug" → "fix-payment-timeout"
+    - "我想添加用户认证" → "user-auth"
+    - "为 API 实现 OAuth2 集成" → "oauth2-api-integration"
+    - "为分析创建仪表盘" → "analytics-dashboard"
+    - "修复支付处理超时 bug" → "fix-payment-timeout"
 
 2. **创建新分支前先检查是否已存在分支**：
 
@@ -75,8 +75,8 @@ $ARGUMENTS
 
 4. 按以下执行流程：
 
-    1. 从 User Input 解析用户描述  
-       - 若为空：报错 `ERROR "No feature description provided"`
+    1. 从用户输入解析用户描述
+       - 若为空：报错 `ERROR "未提供功能描述"`
     2. 从描述中提取关键概念  
        - 识别：参与者（actors）、动作（actions）、数据（data）、约束（constraints）
     3. 对不清晰之处：  
@@ -88,7 +88,7 @@ $ARGUMENTS
        - **限制：最多 3 个 [NEEDS CLARIFICATION] 标记**
        - 澄清优先级：范围 > 安全/隐私 > 用户体验 > 技术细节
     4. 填写“用户场景与测试”章节  
-       - 若无法确定清晰用户流程：报错 `ERROR "Cannot determine user scenarios"`
+       - 若无法确定清晰用户流程：报错 `ERROR "无法确定用户场景"`
     5. 生成功能性需求  
        - 每条需求必须可测试
        - 对未指定细节使用合理默认值（在 Assumptions 章节记录假设）
@@ -237,7 +237,7 @@ $ARGUMENTS
 - 认证方式：Web 应用默认基于 session 或 OAuth2
 - 集成方式：除非另有说明，否则默认 RESTful API
 
-### Success Criteria Guidelines
+### 成功标准指南
 
 成功标准必须满足：
 

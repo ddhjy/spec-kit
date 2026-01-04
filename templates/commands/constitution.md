@@ -37,11 +37,11 @@ $ARGUMENTS
 3. 起草更新后的 constitution 内容：
    - 用具体文本替换每个占位符（除非项目刻意保留某些尚未定义的模板槽位；若保留必须明确说明原因）。
    - 保持标题层级；注释在被替换后可删除，除非仍能提供澄清价值。
-   - 确保每条 Principle（原则）包含：简洁名称、一段说明（或要点列表）表达不可协商规则，必要时给出明确理由。
-   - 确保 Governance（治理）章节包含修订流程、版本策略与合规评审期望。
+  - 确保每条原则（Principle）包含：简洁名称、一段说明（或要点列表）表达不可协商规则，必要时给出明确理由。
+  - 确保治理（Governance）章节包含修订流程、版本策略与合规评审期望。
 
 4. 一致性同步清单（将此前“清单”变为实际校验步骤）：
-   - 阅读 `/templates/plan-template.md`，确保其中的 “Constitution Check” 与规则与更新后的原则一致。
+  - 阅读 `/templates/plan-template.md`，确保其中的“Constitution 检查”（或对应章节）与规则与更新后的原则一致。
    - 阅读 `/templates/spec-template.md`，确保范围/需求对齐——若 constitution 增删了必填章节或约束，则同步更新模板。
    - 阅读 `/templates/tasks-template.md`，确保任务分类反映新增/移除的“原则驱动型任务类型”（例如可观测性、版本策略、测试纪律）。
    - 阅读 `/templates/commands/*.md` 下的每个命令文件（包括本文件），确保在需要通用指导时不会残留过时引用（例如只写 CLAUDE 等 agent 特定名称）。
@@ -59,7 +59,7 @@ $ARGUMENTS
    - 不残留任何未解释的方括号占位符。
    - 版本行与报告一致。
    - 日期使用 ISO 格式 YYYY-MM-DD。
-   - 原则以陈述句表达、可测试，避免含糊措辞（例如将 “should” 在需要时替换为 MUST/SHOULD 并给出理由）。
+  - 原则以可测试的陈述句表达，避免含糊措辞（例如在需要时将 “should（应当）” 替换为 MUST/SHOULD 并给出理由）。
 
 7. 将完成后的 constitution 覆写回 `/memory/constitution.md`。
 
@@ -70,10 +70,10 @@ $ARGUMENTS
 
 格式与风格要求：
 
-- Use Markdown headings exactly as in the template (do not demote/promote levels).
-- Wrap long rationale lines to keep readability (<100 chars ideally) but do not hard enforce with awkward breaks.
-- Keep a single blank line between sections.
-- Avoid trailing whitespace.
+- Markdown 标题层级必须与模板完全一致（不要升降级标题）。
+- 为了可读性，可对较长理由行进行折行（理想情况下 <100 字符），但不要为了强制对齐而产生别扭的断行。
+- 章节之间保持一个空行。
+- 避免行尾空白字符。
 
 如果用户只提供部分更新（例如只改一条原则），也必须执行校验与版本决策步骤。
 

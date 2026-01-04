@@ -1,58 +1,58 @@
 #!/bin/bash
 
-# Exit immediately on error, treat unset variables as an error, and fail if any command in a pipeline fails.
+# 出错即退出；未设置变量视为错误；管道中任一命令失败则整体失败。
 set -euo pipefail
 
-# Function to run a command and show logs only on error
+# 运行命令：仅在失败时输出日志
 run_command() {
     local command_to_run="$*"
     local output
     local exit_code
     
-    # Capture all output (stdout and stderr)
+    # 捕获所有输出（stdout 与 stderr）
     output=$(eval "$command_to_run" 2>&1) || exit_code=$?
     exit_code=${exit_code:-0}
     
     if [ $exit_code -ne 0 ]; then
-        echo -e "\033[0;31m[ERROR] Command failed (Exit Code $exit_code): $command_to_run\033[0m" >&2
+        echo -e "\033[0;31m[错误] 命令执行失败（退出码 $exit_code）：$command_to_run\033[0m" >&2
         echo -e "\033[0;31m$output\033[0m" >&2
         
         exit $exit_code
     fi
 }
 
-# Installing CLI-based AI Agents
+# 安装基于 CLI 的 AI Agents
 
-echo -e "\n🤖 Installing Copilot CLI..."
+echo -e "\n🤖 正在安装 Copilot CLI..."
 run_command "npm install -g @github/copilot@latest"
-echo "✅ Done"
+echo "✅ 完成"
 
-echo -e "\n🤖 Installing Claude CLI..."
+echo -e "\n🤖 正在安装 Claude CLI..."
 run_command "npm install -g @anthropic-ai/claude-code@latest"
-echo "✅ Done"
+echo "✅ 完成"
 
-echo -e "\n🤖 Installing Codex CLI..."
+echo -e "\n🤖 正在安装 Codex CLI..."
 run_command "npm install -g @openai/codex@latest"
-echo "✅ Done"
+echo "✅ 完成"
 
-echo -e "\n🤖 Installing Gemini CLI..."
+echo -e "\n🤖 正在安装 Gemini CLI..."
 run_command "npm install -g @google/gemini-cli@latest"
-echo "✅ Done"
+echo "✅ 完成"
 
-echo -e "\n🤖 Installing Augie CLI..."
+echo -e "\n🤖 正在安装 Augie CLI..."
 run_command "npm install -g @augmentcode/auggie@latest"
-echo "✅ Done"
+echo "✅ 完成"
 
-echo -e "\n🤖 Installing Qwen Code CLI..."
+echo -e "\n🤖 正在安装 Qwen Code CLI..."
 run_command "npm install -g @qwen-code/qwen-code@latest"
-echo "✅ Done"
+echo "✅ 完成"
 
-echo -e "\n🤖 Installing OpenCode CLI..."
+echo -e "\n🤖 正在安装 OpenCode CLI..."
 run_command "npm install -g opencode-ai@latest"
-echo "✅ Done"
+echo "✅ 完成"
 
-echo -e "\n🤖 Installing Amazon Q CLI..."
-# 👉🏾 https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-verify-download.html
+echo -e "\n🤖 正在安装 Amazon Q CLI..."
+# 👉🏾 验证与下载说明：https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-verify-download.html
 
 run_command "curl --proto '=https' --tlsv1.2 -sSf 'https://desktop-release.q.us-east-1.amazonaws.com/latest/q-x86_64-linux.zip' -o 'q.zip'"
 run_command "curl --proto '=https' --tlsv1.2 -sSf 'https://desktop-release.q.us-east-1.amazonaws.com/latest/q-x86_64-linux.zip.sig' -o 'q.zip.sig'"
@@ -77,24 +77,24 @@ run_command "unzip -q q.zip"
 run_command "chmod +x ./q/install.sh"
 run_command "./q/install.sh --no-confirm"
 run_command "rm -rf ./q q.zip q.zip.sig amazonq-public-key.asc"
-echo "✅ Done"
+echo "✅ 完成"
 
-echo -e "\n🤖 Installing CodeBuddy CLI..."
+echo -e "\n🤖 正在安装 CodeBuddy CLI..."
 run_command "npm install -g @tencent-ai/codebuddy-code@latest"
-echo "✅ Done"
+echo "✅ 完成"
 
-# Installing UV (Python package manager)
-echo -e "\n🐍 Installing UV - Python Package Manager..."
+# 安装 UV（Python 包管理器）
+echo -e "\n🐍 正在安装 UV（Python 包管理器）..."
 run_command "pipx install uv"
-echo "✅ Done"
+echo "✅ 完成"
 
-# Installing DocFx (for documentation site)
-echo -e "\n📚 Installing DocFx..."
+# 安装 DocFx（用于文档站点）
+echo -e "\n📚 正在安装 DocFx..."
 run_command "dotnet tool update -g docfx"
-echo "✅ Done"
+echo "✅ 完成"
 
-echo -e "\n🧹 Cleaning cache..."
+echo -e "\n🧹 正在清理缓存..."
 run_command "sudo apt-get autoclean"
 run_command "sudo apt-get clean"
 
-echo "✅ Setup completed. Happy coding! 🚀"
+echo "✅ 环境初始化完成。祝编码顺利！"

@@ -1,9 +1,9 @@
-# DocFX build output
+# DocFX 构建输出
 _site/
 obj/
 .docfx/
 
-# Temporary files
+# 临时文件
 *.tmp
 *.log
 

@@ -91,7 +91,7 @@ $ARGUMENTS
    - **C**: `build/`, `bin/`, `obj/`, `out/`, `*.o`, `*.a`, `*.so`, `*.exe`, `Makefile`, `config.log`, `.idea/`, `*.log`, `.env*`
    - **Swift**: `.build/`, `DerivedData/`, `*.swiftpm/`, `Packages/`
    - **R**: `.Rproj.user/`, `.Rhistory`, `.RData`, `.Ruserdata`, `*.Rproj`, `packrat/`, `renv/`
-   - **Universal**: `.DS_Store`, `Thumbs.db`, `*.tmp`, `*.swp`, `.vscode/`, `.idea/`
+   - **通用**: `.DS_Store`, `Thumbs.db`, `*.tmp`, `*.swp`, `.vscode/`, `.idea/`
 
    **工具专用模式**：
    - **Docker**: `node_modules/`, `.git/`, `Dockerfile*`, `.dockerignore`, `*.log*`, `.env*`, `coverage/`
@@ -101,38 +101,38 @@ $ARGUMENTS
    - **Kubernetes/k8s**: `*.secret.yaml`, `secrets/`, `.kube/`, `kubeconfig*`, `*.key`, `*.crt`
 
 5. 解析 tasks.md 结构并提取：
-   - **Task phases**: Setup, Tests, Core, Integration, Polish
-   - **Task dependencies**: Sequential vs parallel execution rules
-   - **Task details**: ID, description, file paths, parallel markers [P]
-   - **Execution flow**: Order and dependency requirements
+   - **任务阶段**：Setup、Tests、Core、Integration、Polish
+   - **任务依赖**：串行 vs 并行的执行规则
+   - **任务详情**：ID、描述、文件路径、并行标记 [P]
+   - **执行流程**：顺序与依赖要求
 
 6. 按任务计划执行实现：
-   - **Phase-by-phase execution**: Complete each phase before moving to the next
-   - **Respect dependencies**: Run sequential tasks in order, parallel tasks [P] can run together  
-   - **Follow TDD approach**: Execute test tasks before their corresponding implementation tasks
-   - **File-based coordination**: Tasks affecting the same files must run sequentially
-   - **Validation checkpoints**: Verify each phase completion before proceeding
+   - **按阶段执行**：每个阶段完成后再进入下一阶段
+   - **遵守依赖**：串行任务按顺序执行；标注 [P] 的并行任务可一起执行  
+   - **遵循 TDD**：测试任务应先于其对应的实现任务
+   - **按文件协调**：影响同一文件的任务必须串行执行
+   - **校验检查点**：每个阶段完成后先校验再继续
 
 7. 实现执行规则：
-   - **Setup first**: Initialize project structure, dependencies, configuration
-   - **Tests before code**: If you need to write tests for contracts, entities, and integration scenarios
-   - **Core development**: Implement models, services, CLI commands, endpoints
-   - **Integration work**: Database connections, middleware, logging, external services
-   - **Polish and validation**: Unit tests, performance optimization, documentation
+   - **先做 Setup**：初始化项目结构、依赖与配置
+   - **先写测试再写代码**：若需要为 contracts、entities 与集成场景编写测试
+   - **核心开发**：实现 models、services、CLI 命令、endpoints
+   - **集成工作**：数据库连接、中间件、日志、外部服务
+   - **打磨与校验**：单元测试、性能优化、文档
 
 8. 进度跟踪与错误处理：
-   - Report progress after each completed task
-   - Halt execution if any non-parallel task fails
-   - For parallel tasks [P], continue with successful tasks, report failed ones
-   - Provide clear error messages with context for debugging
-   - Suggest next steps if implementation cannot proceed
+   - 每完成一个任务就汇报进度
+   - 任何非并行任务失败都应停止执行
+   - 对并行任务 [P]：继续执行成功的任务，并汇报失败任务
+   - 提供带上下文的清晰错误信息，便于排障
+   - 若实现无法继续，给出下一步建议
    - **重要**：完成任务后，务必在 tasks 文件中将其勾选为 [X]。
 
 9. 完成校验：
-   - Verify all required tasks are completed
-   - Check that implemented features match the original specification
-   - Validate that tests pass and coverage meets requirements
-   - Confirm the implementation follows the technical plan
-   - Report final status with summary of completed work
+   - 校验所有必需任务都已完成
+   - 检查实现功能是否匹配原始规格说明
+   - 验证测试是否通过、覆盖率是否满足要求
+   - 确认实现是否遵循技术计划
+   - 汇报最终状态与已完成工作摘要
 
 说明：该命令假设 tasks.md 中已存在完整任务拆分。若任务不完整或缺失，请建议先运行 `/speckit.tasks` 重新生成任务清单。

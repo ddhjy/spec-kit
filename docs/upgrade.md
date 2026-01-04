@@ -87,9 +87,9 @@ specify init --here --force --ai copilot
 不使用 `--force` 时，CLI 会提示警告并请求确认：
 
 ```text
-Warning: Current directory is not empty (25 items)
-Template files will be merged with existing content and may overwrite existing files
-Proceed? [y/N]
+警告：当前目录非空（25 个条目）
+模板文件将与现有内容合并，并可能覆盖已有文件
+继续？[y/N]
 ```
 
 使用 `--force` 时，会跳过确认并立即继续。

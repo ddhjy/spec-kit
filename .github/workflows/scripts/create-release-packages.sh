@@ -45,19 +45,19 @@ generate_commands() {
     local name description script_command agent_script_command body
     name=$(basename "$template" .md)
     
-    # Normalize line endings
+    # 规范化换行符
     file_content=$(tr -d '\r' < "$template")
     
-    # Extract description and script command from YAML frontmatter
+    # 从 YAML frontmatter 提取 description 与脚本命令
     description=$(printf '%s\n' "$file_content" | awk '/^description:/ {sub(/^description:[[:space:]]*/, ""); print; exit}')
     script_command=$(printf '%s\n' "$file_content" | awk -v sv="$script_variant" '/^[[:space:]]*'"$script_variant"':[[:space:]]*/ {sub(/^[[:space:]]*'"$script_variant"':[[:space:]]*/, ""); print; exit}')
     
     if [[ -z $script_command ]]; then
       echo "警告：在 $template 中未找到 $script_variant 对应的脚本命令" >&2
-      script_command="(Missing script command for $script_variant)"
+      script_command="（缺失 $script_variant 对应的脚本命令）"
     fi
     
-    # Extract agent_script command from YAML frontmatter if present
+    # 若存在则从 YAML frontmatter 提取 agent_script 命令
     agent_script_command=$(printf '%s\n' "$file_content" | awk '
       /^agent_scripts:$/ { in_agent_scripts=1; next }
       in_agent_scripts && /^[[:space:]]*'"$script_variant"':[[:space:]]*/ {
@@ -68,15 +68,15 @@ generate_commands() {
       in_agent_scripts && /^[a-zA-Z]/ { in_agent_scripts=0 }
     ')
     
-    # Replace {SCRIPT} placeholder with the script command
+    # 用脚本命令替换 {SCRIPT} 占位符
     body=$(printf '%s\n' "$file_content" | sed "s|{SCRIPT}|${script_command}|g")
     
-    # Replace {AGENT_SCRIPT} placeholder with the agent script command if found
+    # 若存在 agent_script 命令，则替换 {AGENT_SCRIPT} 占位符
     if [[ -n $agent_script_command ]]; then
       body=$(printf '%s\n' "$body" | sed "s|{AGENT_SCRIPT}|${agent_script_command}|g")
     fi
     
-    # Remove the scripts: and agent_scripts: sections from frontmatter while preserving YAML structure
+    # 从 frontmatter 中移除 scripts: 与 agent_scripts: 章节，同时保持 YAML 结构
     body=$(printf '%s\n' "$body" | awk '
       /^---$/ { print; if (++dash_count == 1) in_frontmatter=1; else in_frontmatter=0; next }
       in_frontmatter && /^scripts:$/ { skip_scripts=1; next }
@@ -86,7 +86,7 @@ generate_commands() {
       { print }
     ')
     
-    # Apply other substitutions
+    # 应用其他替换
     body=$(printf '%s\n' "$body" | sed "s/{ARGS}/$arg_format/g" | sed "s/__AGENT__/$agent/g" | rewrite_paths)
     
     case $ext in
@@ -105,14 +105,14 @@ generate_copilot_prompts() {
   local agents_dir=$1 prompts_dir=$2
   mkdir -p "$prompts_dir"
   
-  # Generate a .prompt.md file for each .agent.md file
+  # 为每个 .agent.md 文件生成对应的 .prompt.md 文件
   for agent_file in "$agents_dir"/speckit.*.agent.md; do
     [[ -f "$agent_file" ]] || continue
     
     local basename=$(basename "$agent_file" .agent.md)
     local prompt_file="$prompts_dir/${basename}.prompt.md"
     
-    # Create prompt file with agent frontmatter
+    # 创建带 agent frontmatter 的 prompt 文件
     cat > "$prompt_file" <<EOF
 ---
 agent: ${basename}

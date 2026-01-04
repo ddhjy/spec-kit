@@ -1,5 +1,5 @@
 #!/usr/bin/env pwsh
-# Setup implementation plan for a feature
+# 为 feature 生成实现计划（plan.md）
 
 [CmdletBinding()]
 param(
@@ -9,40 +9,40 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-# Show help if requested
+# 若请求则显示帮助
 if ($Help) {
-    Write-Output "Usage: ./setup-plan.ps1 [-Json] [-Help]"
-    Write-Output "  -Json     Output results in JSON format"
-    Write-Output "  -Help     Show this help message"
+    Write-Output "用法：./setup-plan.ps1 [-Json] [-Help]"
+    Write-Output "  -Json     以 JSON 格式输出结果"
+    Write-Output "  -Help     显示帮助信息"
     exit 0
 }
 
-# Load common functions
+# 加载共用函数
 . "$PSScriptRoot/common.ps1"
 
-# Get all paths and variables from common functions
+# 从共用函数获取所有路径与变量
 $paths = Get-FeaturePathsEnv
 
-# Check if we're on a proper feature branch (only for git repos)
+# 检查是否处于正确的 feature 分支（仅对 git 仓库执行）
 if (-not (Test-FeatureBranch -Branch $paths.CURRENT_BRANCH -HasGit $paths.HAS_GIT)) { 
     exit 1 
 }
 
-# Ensure the feature directory exists
+# 确保 feature 目录存在
 New-Item -ItemType Directory -Path $paths.FEATURE_DIR -Force | Out-Null
 
-# Copy plan template if it exists, otherwise note it or create empty file
+# 若存在 plan 模板则复制，否则提示并创建空文件
 $template = Join-Path $paths.REPO_ROOT '.specify/templates/plan-template.md'
 if (Test-Path $template) { 
     Copy-Item $template $paths.IMPL_PLAN -Force
-    Write-Output "Copied plan template to $($paths.IMPL_PLAN)"
+    Write-Output "已将 plan 模板复制到 $($paths.IMPL_PLAN)"
 } else {
-    Write-Warning "Plan template not found at $template"
-    # Create a basic plan file if template doesn't exist
+    Write-Warning "未找到 plan 模板：$template"
+    # 若模板不存在则创建一个空的 plan 文件
     New-Item -ItemType File -Path $paths.IMPL_PLAN -Force | Out-Null
 }
 
-# Output results
+# 输出结果
 if ($Json) {
     $result = [PSCustomObject]@{ 
         FEATURE_SPEC = $paths.FEATURE_SPEC

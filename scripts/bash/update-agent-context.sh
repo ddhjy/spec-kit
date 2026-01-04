@@ -1,64 +1,64 @@
 #!/usr/bin/env bash
 
-# Update agent context files with information from plan.md
+# 使用 plan.md 信息更新 agent 上下文文件
 #
-# This script maintains AI agent context files by parsing feature specifications 
-# and updating agent-specific configuration files with project information.
+# 本脚本通过解析 feature 规格说明与 plan.md，维护 AI agent 上下文文件，
+# 并将项目信息更新到各 agent 的专用配置文件中。
 #
-# MAIN FUNCTIONS:
-# 1. Environment Validation
-#    - Verifies git repository structure and branch information
-#    - Checks for required plan.md files and templates
-#    - Validates file permissions and accessibility
+# 主要功能：
+# 1. 环境校验
+#    - 校验 git 仓库结构与分支信息
+#    - 检查必需的 plan.md 与模板
+#    - 校验文件权限与可访问性
 #
-# 2. Plan Data Extraction
-#    - Parses plan.md files to extract project metadata
-#    - Identifies language/version, frameworks, databases, and project types
-#    - Handles missing or incomplete specification data gracefully
+# 2. 计划数据提取
+#    - 解析 plan.md 提取项目元数据
+#    - 识别语言/版本、框架、数据库与项目类型
+#    - 对缺失或不完整的规格信息进行“温和降级”处理
 #
-# 3. Agent File Management
-#    - Creates new agent context files from templates when needed
-#    - Updates existing agent files with new project information
-#    - Preserves manual additions and custom configurations
-#    - Supports multiple AI agent formats and directory structures
+# 3. Agent 文件管理
+#    - 必要时基于模板创建新的 agent 上下文文件
+#    - 用新的项目信息更新既有 agent 文件
+#    - 保留手工补充内容与自定义配置
+#    - 支持多种 AI agent 的文件格式与目录结构
 #
-# 4. Content Generation
-#    - Generates language-specific build/test commands
-#    - Creates appropriate project directory structures
-#    - Updates technology stacks and recent changes sections
-#    - Maintains consistent formatting and timestamps
+# 4. 内容生成
+#    - 生成语言相关的构建/测试命令
+#    - 生成合适的项目目录结构
+#    - 更新技术栈与最近变更章节
+#    - 保持一致的格式与时间戳
 #
-# 5. Multi-Agent Support
-#    - Handles agent-specific file paths and naming conventions
-#    - Supports: Claude, Gemini, Copilot, Cursor, Qwen, opencode, Codex, Windsurf, Kilo Code, Auggie CLI, Roo Code, CodeBuddy CLI, Qoder CLI, Amp, SHAI, or Amazon Q Developer CLI
-#    - Can update single agents or all existing agent files
-#    - Creates default Claude file if no agent files exist
+# 5. 多 agent 支持
+#    - 处理各 agent 的文件路径与命名约定
+#    - 支持：Claude、Gemini、Copilot、Cursor、Qwen、opencode、Codex、Windsurf、Kilo Code、Auggie CLI、Roo Code、CodeBuddy CLI、Qoder CLI、Amp、SHAI、Amazon Q Developer CLI
+#    - 可更新单个 agent，或更新所有已存在的 agent 文件
+#    - 若不存在任何 agent 文件，则默认创建 Claude 文件
 #
-# Usage: ./update-agent-context.sh [agent_type]
-# Agent types: claude|gemini|copilot|cursor-agent|qwen|opencode|codex|windsurf|kilocode|auggie|shai|q|bob|qoder
-# Leave empty to update all existing agent files
+# 用法：./update-agent-context.sh [agent_type]
+# agent_type：claude|gemini|copilot|cursor-agent|qwen|opencode|codex|windsurf|kilocode|auggie|shai|q|bob|qoder
+# 留空则更新所有已存在的 agent 文件
 
 set -e
 
-# Enable strict error handling
+# 启用严格错误处理
 set -u
 set -o pipefail
 
 #==============================================================================
-# Configuration and Global Variables
+# 配置与全局变量
 #==============================================================================
 
-# Get script directory and load common functions
+# 获取脚本目录并加载共用函数
 SCRIPT_DIR="$(CDPATH="" cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/common.sh"
 
-# Get all paths and variables from common functions
+# 从共用函数获取所有路径与变量
 eval $(get_feature_paths)
 
 NEW_PLAN="$IMPL_PLAN"  # Alias for compatibility with existing code
 AGENT_TYPE="${1:-}"
 
-# Agent-specific file paths  
+# 各 agent 的文件路径
 CLAUDE_FILE="$REPO_ROOT/CLAUDE.md"
 GEMINI_FILE="$REPO_ROOT/GEMINI.md"
 COPILOT_FILE="$REPO_ROOT/.github/agents/copilot-instructions.md"
@@ -76,21 +76,21 @@ SHAI_FILE="$REPO_ROOT/SHAI.md"
 Q_FILE="$REPO_ROOT/AGENTS.md"
 BOB_FILE="$REPO_ROOT/AGENTS.md"
 
-# Template file
+# 模板文件
 TEMPLATE_FILE="$REPO_ROOT/.specify/templates/agent-file-template.md"
 
-# Global variables for parsed plan data
+# 从 plan 解析得到的全局变量
 NEW_LANG=""
 NEW_FRAMEWORK=""
 NEW_DB=""
 NEW_PROJECT_TYPE=""
 
 #==============================================================================
-# Utility Functions
+# 工具函数
 #==============================================================================
 
 log_info() {
-    echo "INFO: $1"
+    echo "信息：$1"
 }
 
 log_success() {
@@ -98,14 +98,14 @@ log_success() {
 }
 
 log_error() {
-    echo "ERROR: $1" >&2
+    echo "错误：$1" >&2
 }
 
 log_warning() {
-    echo "WARNING: $1" >&2
+    echo "警告：$1" >&2
 }
 
-# Cleanup function for temporary files
+# 清理临时文件
 cleanup() {
     local exit_code=$?
     rm -f /tmp/agent_update_*_$$
@@ -113,44 +113,44 @@ cleanup() {
     exit $exit_code
 }
 
-# Set up cleanup trap
+# 注册清理 trap
 trap cleanup EXIT INT TERM
 
 #==============================================================================
-# Validation Functions
+# 校验函数
 #==============================================================================
 
 validate_environment() {
-    # Check if we have a current branch/feature (git or non-git)
+    # 检查当前分支/feature（git 或非 git）
     if [[ -z "$CURRENT_BRANCH" ]]; then
-        log_error "Unable to determine current feature"
+        log_error "无法确定当前 feature"
         if [[ "$HAS_GIT" == "true" ]]; then
-            log_info "Make sure you're on a feature branch"
+            log_info "请确认你处于 feature 分支上"
         else
-            log_info "Set SPECIFY_FEATURE environment variable or create a feature first"
+            log_info "请设置 SPECIFY_FEATURE 环境变量，或先创建一个 feature"
         fi
         exit 1
     fi
     
-    # Check if plan.md exists
+    # 检查 plan.md 是否存在
     if [[ ! -f "$NEW_PLAN" ]]; then
-        log_error "No plan.md found at $NEW_PLAN"
-        log_info "Make sure you're working on a feature with a corresponding spec directory"
+        log_error "未找到 plan.md：$NEW_PLAN"
+        log_info "请确认你正在一个具有对应 spec 目录的 feature 上工作"
         if [[ "$HAS_GIT" != "true" ]]; then
-            log_info "Use: export SPECIFY_FEATURE=your-feature-name or create a new feature first"
+            log_info "可使用：export SPECIFY_FEATURE=your-feature-name，或先创建一个新 feature"
         fi
         exit 1
     fi
     
-    # Check if template exists (needed for new files)
+    # 检查模板是否存在（新建文件需要）
     if [[ ! -f "$TEMPLATE_FILE" ]]; then
-        log_warning "Template file not found at $TEMPLATE_FILE"
-        log_warning "Creating new agent files will fail"
+        log_warning "未找到模板文件：$TEMPLATE_FILE"
+        log_warning "创建新的 agent 文件将会失败"
     fi
 }
 
 #==============================================================================
-# Plan Parsing Functions
+# 计划解析函数
 #==============================================================================
 
 extract_plan_field() {
@@ -169,16 +169,16 @@ parse_plan_data() {
     local plan_file="$1"
     
     if [[ ! -f "$plan_file" ]]; then
-        log_error "Plan file not found: $plan_file"
+        log_error "未找到 plan 文件：$plan_file"
         return 1
     fi
     
     if [[ ! -r "$plan_file" ]]; then
-        log_error "Plan file is not readable: $plan_file"
+        log_error "plan 文件不可读：$plan_file"
         return 1
     fi
     
-    log_info "Parsing plan data from $plan_file"
+    log_info "正在解析 plan 数据：$plan_file"
     
     NEW_LANG=$(extract_plan_field "Language/Version" "$plan_file")
     NEW_FRAMEWORK=$(extract_plan_field "Primary Dependencies" "$plan_file")
@@ -187,21 +187,21 @@ parse_plan_data() {
     
     # Log what we found
     if [[ -n "$NEW_LANG" ]]; then
-        log_info "Found language: $NEW_LANG"
+        log_info "检测到语言：$NEW_LANG"
     else
-        log_warning "No language information found in plan"
+        log_warning "plan 中未找到语言信息"
     fi
     
     if [[ -n "$NEW_FRAMEWORK" ]]; then
-        log_info "Found framework: $NEW_FRAMEWORK"
+        log_info "检测到框架：$NEW_FRAMEWORK"
     fi
     
     if [[ -n "$NEW_DB" ]] && [[ "$NEW_DB" != "N/A" ]]; then
-        log_info "Found database: $NEW_DB"
+        log_info "检测到数据库：$NEW_DB"
     fi
     
     if [[ -n "$NEW_PROJECT_TYPE" ]]; then
-        log_info "Found project type: $NEW_PROJECT_TYPE"
+        log_info "检测到项目类型：$NEW_PROJECT_TYPE"
     fi
 }
 
@@ -230,7 +230,7 @@ format_technology_stack() {
 }
 
 #==============================================================================
-# Template and Content Generation Functions
+# 模板与内容生成函数
 #==============================================================================
 
 get_project_structure() {
@@ -274,19 +274,19 @@ create_new_agent_file() {
     local current_date="$4"
     
     if [[ ! -f "$TEMPLATE_FILE" ]]; then
-        log_error "Template not found at $TEMPLATE_FILE"
+        log_error "未找到模板：$TEMPLATE_FILE"
         return 1
     fi
     
     if [[ ! -r "$TEMPLATE_FILE" ]]; then
-        log_error "Template file is not readable: $TEMPLATE_FILE"
+        log_error "模板文件不可读：$TEMPLATE_FILE"
         return 1
     fi
     
-    log_info "Creating new agent context file from template..."
+    log_info "正在从模板创建新的 agent 上下文文件……"
     
     if ! cp "$TEMPLATE_FILE" "$temp_file"; then
-        log_error "Failed to copy template file"
+        log_error "复制模板文件失败"
         return 1
     fi
     
@@ -320,13 +320,13 @@ create_new_agent_file() {
 
     local recent_change
     if [[ -n "$escaped_lang" && -n "$escaped_framework" ]]; then
-        recent_change="- $escaped_branch: Added $escaped_lang + $escaped_framework"
+        recent_change="- $escaped_branch：新增 $escaped_lang + $escaped_framework"
     elif [[ -n "$escaped_lang" ]]; then
-        recent_change="- $escaped_branch: Added $escaped_lang"
+        recent_change="- $escaped_branch：新增 $escaped_lang"
     elif [[ -n "$escaped_framework" ]]; then
-        recent_change="- $escaped_branch: Added $escaped_framework"
+        recent_change="- $escaped_branch：新增 $escaped_framework"
     else
-        recent_change="- $escaped_branch: Added"
+        recent_change="- $escaped_branch：新增"
     fi
 
     local substitutions=(
@@ -341,7 +341,7 @@ create_new_agent_file() {
     
     for substitution in "${substitutions[@]}"; do
         if ! sed -i.bak -e "$substitution" "$temp_file"; then
-            log_error "Failed to perform substitution: $substitution"
+            log_error "执行替换失败：$substitution"
             rm -f "$temp_file" "$temp_file.bak"
             return 1
         fi
@@ -364,12 +364,12 @@ update_existing_agent_file() {
     local target_file="$1"
     local current_date="$2"
     
-    log_info "Updating existing agent context file..."
+    log_info "正在更新现有 agent 上下文文件……"
     
     # Use a single temporary file for atomic update
     local temp_file
     temp_file=$(mktemp) || {
-        log_error "Failed to create temporary file"
+        log_error "创建临时文件失败"
         return 1
     }
     
@@ -389,9 +389,9 @@ update_existing_agent_file() {
     
     # Prepare new change entry
     if [[ -n "$tech_stack" ]]; then
-        new_change_entry="- $CURRENT_BRANCH: Added $tech_stack"
+        new_change_entry="- $CURRENT_BRANCH：新增 $tech_stack"
     elif [[ -n "$NEW_DB" ]] && [[ "$NEW_DB" != "N/A" ]] && [[ "$NEW_DB" != "NEEDS CLARIFICATION" ]]; then
-        new_change_entry="- $CURRENT_BRANCH: Added $NEW_DB"
+        new_change_entry="- $CURRENT_BRANCH：新增 $NEW_DB"
     fi
     
     # Check if sections exist in the file
@@ -493,7 +493,7 @@ update_existing_agent_file() {
     
     # Move temp file to target atomically
     if ! mv "$temp_file" "$target_file"; then
-        log_error "Failed to update target file"
+        log_error "更新目标文件失败"
         rm -f "$temp_file"
         return 1
     fi
@@ -501,7 +501,7 @@ update_existing_agent_file() {
     return 0
 }
 #==============================================================================
-# Main Agent File Update Function
+# 主 agent 文件更新函数
 #==============================================================================
 
 update_agent_file() {
@@ -509,11 +509,11 @@ update_agent_file() {
     local agent_name="$2"
     
     if [[ -z "$target_file" ]] || [[ -z "$agent_name" ]]; then
-        log_error "update_agent_file requires target_file and agent_name parameters"
+        log_error "update_agent_file 需要 target_file 与 agent_name 参数"
         return 1
     fi
     
-    log_info "Updating $agent_name context file: $target_file"
+    log_info "正在更新 $agent_name 上下文文件：$target_file"
     
     local project_name
     project_name=$(basename "$REPO_ROOT")
@@ -525,7 +525,7 @@ update_agent_file() {
     target_dir=$(dirname "$target_file")
     if [[ ! -d "$target_dir" ]]; then
         if ! mkdir -p "$target_dir"; then
-            log_error "Failed to create directory: $target_dir"
+            log_error "创建目录失败：$target_dir"
             return 1
         fi
     fi
@@ -534,39 +534,39 @@ update_agent_file() {
         # Create new file from template
         local temp_file
         temp_file=$(mktemp) || {
-            log_error "Failed to create temporary file"
+            log_error "创建临时文件失败"
             return 1
         }
         
         if create_new_agent_file "$target_file" "$temp_file" "$project_name" "$current_date"; then
             if mv "$temp_file" "$target_file"; then
-                log_success "Created new $agent_name context file"
+                log_success "已创建新的 $agent_name 上下文文件"
             else
-                log_error "Failed to move temporary file to $target_file"
+                log_error "将临时文件移动到 $target_file 失败"
                 rm -f "$temp_file"
                 return 1
             fi
         else
-            log_error "Failed to create new agent file"
+            log_error "创建新的 agent 文件失败"
             rm -f "$temp_file"
             return 1
         fi
     else
         # Update existing file
         if [[ ! -r "$target_file" ]]; then
-            log_error "Cannot read existing file: $target_file"
+            log_error "无法读取已有文件：$target_file"
             return 1
         fi
         
         if [[ ! -w "$target_file" ]]; then
-            log_error "Cannot write to existing file: $target_file"
+            log_error "无法写入已有文件：$target_file"
             return 1
         fi
         
         if update_existing_agent_file "$target_file" "$current_date"; then
-            log_success "Updated existing $agent_name context file"
+            log_success "已更新现有 $agent_name 上下文文件"
         else
-            log_error "Failed to update existing agent file"
+            log_error "更新现有 agent 文件失败"
             return 1
         fi
     fi
@@ -575,7 +575,7 @@ update_agent_file() {
 }
 
 #==============================================================================
-# Agent Selection and Processing
+# agent 选择与处理
 #==============================================================================
 
 update_specific_agent() {
@@ -634,8 +634,8 @@ update_specific_agent() {
             update_agent_file "$BOB_FILE" "IBM Bob"
             ;;
         *)
-            log_error "Unknown agent type '$agent_type'"
-            log_error "Expected: claude|gemini|copilot|cursor-agent|qwen|opencode|codex|windsurf|kilocode|auggie|roo|amp|shai|q|bob|qoder"
+            log_error "未知 agent 类型：'$agent_type'"
+            log_error "期望值：claude|gemini|copilot|cursor-agent|qwen|opencode|codex|windsurf|kilocode|auggie|roo|amp|shai|q|bob|qoder"
             exit 1
             ;;
     esac
@@ -722,44 +722,44 @@ update_all_existing_agents() {
     
     # If no agent files exist, create a default Claude file
     if [[ "$found_agent" == false ]]; then
-        log_info "No existing agent files found, creating default Claude file..."
+        log_info "未找到已存在的 agent 文件，正在创建默认 Claude 文件……"
         update_agent_file "$CLAUDE_FILE" "Claude Code"
     fi
 }
 print_summary() {
     echo
-    log_info "Summary of changes:"
+    log_info "变更摘要："
     
     if [[ -n "$NEW_LANG" ]]; then
-        echo "  - Added language: $NEW_LANG"
+        echo "  - 新增语言：$NEW_LANG"
     fi
     
     if [[ -n "$NEW_FRAMEWORK" ]]; then
-        echo "  - Added framework: $NEW_FRAMEWORK"
+        echo "  - 新增框架：$NEW_FRAMEWORK"
     fi
     
     if [[ -n "$NEW_DB" ]] && [[ "$NEW_DB" != "N/A" ]]; then
-        echo "  - Added database: $NEW_DB"
+        echo "  - 新增数据库：$NEW_DB"
     fi
     
     echo
 
-    log_info "Usage: $0 [claude|gemini|copilot|cursor-agent|qwen|opencode|codex|windsurf|kilocode|auggie|codebuddy|shai|q|bob|qoder]"
+    log_info "用法：$0 [claude|gemini|copilot|cursor-agent|qwen|opencode|codex|windsurf|kilocode|auggie|codebuddy|shai|q|bob|qoder]"
 }
 
 #==============================================================================
-# Main Execution
+# 主执行流程
 #==============================================================================
 
 main() {
     # Validate environment before proceeding
     validate_environment
     
-    log_info "=== Updating agent context files for feature $CURRENT_BRANCH ==="
+    log_info "=== 正在为 feature $CURRENT_BRANCH 更新 agent 上下文文件 ==="
     
     # Parse the plan file to extract project information
     if ! parse_plan_data "$NEW_PLAN"; then
-        log_error "Failed to parse plan data"
+        log_error "解析 plan 数据失败"
         exit 1
     fi
     
@@ -768,13 +768,13 @@ main() {
     
     if [[ -z "$AGENT_TYPE" ]]; then
         # No specific agent provided - update all existing agent files
-        log_info "No agent specified, updating all existing agent files..."
+        log_info "未指定 agent，正在更新所有已存在的 agent 文件……"
         if ! update_all_existing_agents; then
             success=false
         fi
     else
         # Specific agent provided - update only that agent
-        log_info "Updating specific agent: $AGENT_TYPE"
+        log_info "正在更新指定 agent：$AGENT_TYPE"
         if ! update_specific_agent "$AGENT_TYPE"; then
             success=false
         fi
@@ -784,15 +784,15 @@ main() {
     print_summary
     
     if [[ "$success" == true ]]; then
-        log_success "Agent context update completed successfully"
+        log_success "agent 上下文更新成功完成"
         exit 0
     else
-        log_error "Agent context update completed with errors"
+        log_error "agent 上下文更新完成，但存在错误"
         exit 1
     fi
 }
 
-# Execute main function if script is run directly
+# 若脚本被直接运行，则执行 main
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     main "$@"
 fi

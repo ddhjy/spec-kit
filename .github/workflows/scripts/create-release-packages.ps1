@@ -43,7 +43,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-# Validate version format
+# 校验版本号格式
 if ($Version -notmatch '^v\d+\.\d+\.\d+$') {
     Write-Error "版本号格式必须类似 v0.0.0"
     exit 1
@@ -51,7 +51,7 @@ if ($Version -notmatch '^v\d+\.\d+\.\d+$') {
 
 Write-Host "正在为 $Version 构建 release 包"
 
-# Create and use .genreleases directory for all build artifacts
+# 创建并使用 .genreleases 目录存放所有构建产物
 $GenReleasesDir = ".genreleases"
 if (Test-Path $GenReleasesDir) {
     Remove-Item -Path $GenReleasesDir -Recurse -Force -ErrorAction SilentlyContinue
@@ -83,41 +83,41 @@ function Generate-Commands {
     foreach ($template in $templates) {
         $name = [System.IO.Path]::GetFileNameWithoutExtension($template.Name)
         
-        # Read file content and normalize line endings
+        # 读取文件内容并规范化换行符
         $fileContent = (Get-Content -Path $template.FullName -Raw) -replace "`r`n", "`n"
         
-        # Extract description from YAML frontmatter
+        # 从 YAML frontmatter 提取 description
         $description = ""
         if ($fileContent -match '(?m)^description:\s*(.+)$') {
             $description = $matches[1]
         }
         
-        # Extract script command from YAML frontmatter
+        # 从 YAML frontmatter 提取脚本命令
         $scriptCommand = ""
         if ($fileContent -match "(?m)^\s*${ScriptVariant}:\s*(.+)$") {
             $scriptCommand = $matches[1]
         }
         
         if ([string]::IsNullOrEmpty($scriptCommand)) {
-            Write-Warning "No script command found for $ScriptVariant in $($template.Name)"
-            $scriptCommand = "(Missing script command for $ScriptVariant)"
+            Write-Warning "在 $($template.Name) 中未找到 $ScriptVariant 对应的脚本命令"
+            $scriptCommand = "（缺失 $ScriptVariant 对应的脚本命令）"
         }
         
-        # Extract agent_script command from YAML frontmatter if present
+        # 若存在则从 YAML frontmatter 提取 agent_script 命令
         $agentScriptCommand = ""
         if ($fileContent -match "(?ms)agent_scripts:.*?^\s*${ScriptVariant}:\s*(.+?)$") {
             $agentScriptCommand = $matches[1].Trim()
         }
         
-        # Replace {SCRIPT} placeholder with the script command
+        # 用脚本命令替换 {SCRIPT} 占位符
         $body = $fileContent -replace '\{SCRIPT\}', $scriptCommand
         
-        # Replace {AGENT_SCRIPT} placeholder with the agent script command if found
+        # 若存在 agent_script 命令，则替换 {AGENT_SCRIPT} 占位符
         if (-not [string]::IsNullOrEmpty($agentScriptCommand)) {
             $body = $body -replace '\{AGENT_SCRIPT\}', $agentScriptCommand
         }
         
-        # Remove the scripts: and agent_scripts: sections from frontmatter
+        # 从 frontmatter 中移除 scripts: 与 agent_scripts: 章节
         $lines = $body -split "`n"
         $outputLines = @()
         $inFrontmatter = $false
@@ -154,12 +154,12 @@ function Generate-Commands {
         
         $body = $outputLines -join "`n"
         
-        # Apply other substitutions
+        # 应用其他替换
         $body = $body -replace '\{ARGS\}', $ArgFormat
         $body = $body -replace '__AGENT__', $Agent
         $body = Rewrite-Paths -Content $body
         
-        # Generate output file based on extension
+        # 根据扩展名生成输出文件
         $outputFile = Join-Path $OutputDir "speckit.$name.$Extension"
         
         switch ($Extension) {
@@ -211,17 +211,17 @@ function Build-Variant {
     Write-Host "Building $Agent ($Script) package..."
     New-Item -ItemType Directory -Path $baseDir -Force | Out-Null
     
-    # Copy base structure but filter scripts by variant
+    # 复制基础结构，但按变体过滤 scripts
     $specDir = Join-Path $baseDir ".specify"
     New-Item -ItemType Directory -Path $specDir -Force | Out-Null
     
-    # Copy memory directory
+    # 复制 memory 目录
     if (Test-Path "memory") {
         Copy-Item -Path "memory" -Destination $specDir -Recurse -Force
-        Write-Host "Copied memory -> .specify"
+        Write-Host "已复制 memory -> .specify"
     }
     
-    # Only copy the relevant script variant directory
+    # 只复制对应的脚本变体目录
     if (Test-Path "scripts") {
         $scriptsDestDir = Join-Path $specDir "scripts"
         New-Item -ItemType Directory -Path $scriptsDestDir -Force | Out-Null
@@ -230,24 +230,24 @@ function Build-Variant {
             'sh' {
                 if (Test-Path "scripts/bash") {
                     Copy-Item -Path "scripts/bash" -Destination $scriptsDestDir -Recurse -Force
-                    Write-Host "Copied scripts/bash -> .specify/scripts"
+                    Write-Host "已复制 scripts/bash -> .specify/scripts"
                 }
             }
             'ps' {
                 if (Test-Path "scripts/powershell") {
                     Copy-Item -Path "scripts/powershell" -Destination $scriptsDestDir -Recurse -Force
-                    Write-Host "Copied scripts/powershell -> .specify/scripts"
+                    Write-Host "已复制 scripts/powershell -> .specify/scripts"
                 }
             }
         }
         
-        # Copy any script files that aren't in variant-specific directories
+        # 复制不在变体专用目录中的脚本文件
         Get-ChildItem -Path "scripts" -File -ErrorAction SilentlyContinue | ForEach-Object {
             Copy-Item -Path $_.FullName -Destination $scriptsDestDir -Force
         }
     }
     
-    # Copy templates (excluding commands directory and vscode-settings.json)
+    # 复制 templates（排除 commands 目录与 vscode-settings.json）
     if (Test-Path "templates") {
         $templatesDestDir = Join-Path $specDir "templates"
         New-Item -ItemType Directory -Path $templatesDestDir -Force | Out-Null
@@ -261,10 +261,10 @@ function Build-Variant {
             New-Item -ItemType Directory -Path $destFileDir -Force | Out-Null
             Copy-Item -Path $_.FullName -Destination $destFile -Force
         }
-        Write-Host "Copied templates -> .specify/templates"
+        Write-Host "已复制 templates -> .specify/templates"
     }
     
-    # Generate agent-specific command files
+    # 生成 agent 专用命令文件
     switch ($Agent) {
         'claude' {
             $cmdDir = Join-Path $baseDir ".claude/commands"
@@ -281,11 +281,11 @@ function Build-Variant {
             $agentsDir = Join-Path $baseDir ".github/agents"
             Generate-Commands -Agent 'copilot' -Extension 'agent.md' -ArgFormat '$ARGUMENTS' -OutputDir $agentsDir -ScriptVariant $Script
             
-            # Generate companion prompt files
+            # 生成配套的 prompt 文件
             $promptsDir = Join-Path $baseDir ".github/prompts"
             Generate-CopilotPrompts -AgentsDir $agentsDir -PromptsDir $promptsDir
             
-            # Create VS Code workspace settings
+            # 创建 VS Code 工作区设置
             $vscodeDir = Join-Path $baseDir ".vscode"
             New-Item -ItemType Directory -Path $vscodeDir -Force | Out-Null
             if (Test-Path "templates/vscode-settings.json") {
@@ -349,13 +349,13 @@ function Build-Variant {
         }
     }
     
-    # Create zip archive
+    # 创建 zip 压缩包
     $zipFile = Join-Path $GenReleasesDir "spec-kit-template-${Agent}-${Script}-${Version}.zip"
     Compress-Archive -Path "$baseDir/*" -DestinationPath $zipFile -Force
     Write-Host "Created $zipFile"
 }
 
-# Define all agents and scripts
+# 定义所有 agents 与 scripts
 $AllAgents = @('claude', 'gemini', 'copilot', 'cursor-agent', 'qwen', 'opencode', 'windsurf', 'codex', 'kilocode', 'auggie', 'roo', 'codebuddy', 'amp', 'q', 'bob', 'qoder')
 $AllScripts = @('sh', 'ps')
 
@@ -366,7 +366,7 @@ function Normalize-List {
         return @()
     }
     
-    # Split by comma or space and remove duplicates while preserving order
+    # 以逗号或空格分割，并在保持顺序的同时去重
     $items = $Input -split '[,\s]+' | Where-Object { $_ } | Select-Object -Unique
     return $items
 }
@@ -388,7 +388,7 @@ function Validate-Subset {
     return $ok
 }
 
-# Determine agent list
+# 确定 agent 列表
 if (-not [string]::IsNullOrEmpty($Agents)) {
     $AgentList = Normalize-List -Input $Agents
     if (-not (Validate-Subset -Type 'agent' -Allowed $AllAgents -Items $AgentList)) {
@@ -398,7 +398,7 @@ if (-not [string]::IsNullOrEmpty($Agents)) {
     $AgentList = $AllAgents
 }
 
-# Determine script list
+# 确定脚本列表
 if (-not [string]::IsNullOrEmpty($Scripts)) {
     $ScriptList = Normalize-List -Input $Scripts
     if (-not (Validate-Subset -Type 'script' -Allowed $AllScripts -Items $ScriptList)) {
@@ -411,7 +411,7 @@ if (-not [string]::IsNullOrEmpty($Scripts)) {
 Write-Host "Agents: $($AgentList -join ', ')"
 Write-Host "Scripts: $($ScriptList -join ', ')"
 
-# Build all variants
+# 构建所有变体
 foreach ($agent in $AgentList) {
     foreach ($script in $ScriptList) {
         Build-Variant -Agent $agent -Script $script

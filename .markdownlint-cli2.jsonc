@@ -1,5 +1,5 @@
 {
-  // https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+  // 规则说明：https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
   "config": {
     "default": true,
     "MD003": {

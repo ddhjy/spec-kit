@@ -1,9 +1,9 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/python
+// 格式说明参见 https://aka.ms/devcontainer.json。配置选项参见：
+// https://github.com/devcontainers/templates/tree/main/src/python 的 README
 {
 	"name": "SpecKitDevContainer",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/python:3.13-trixie", // based on Debian "Trixie" (13)
+	// 也可以使用 Dockerfile 或 Docker Compose 文件。更多信息：https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/python:3.13-trixie", // 基于 Debian “Trixie”(13)
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:2": {
 			"installZsh": true,
@@ -26,9 +26,9 @@
 		}
 	},
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// 使用 forwardPorts 将容器内端口转发到本地。
   "forwardPorts": [
-	8080 // for Spec-Kit documentation site
+	8080 // 用于 Spec-Kit 文档站点
   ],
   "containerUser": "devcontainer",
   "updateRemoteUserUID": true,
@@ -41,24 +41,24 @@
 		"eamodio.gitlens",
 		"anweber.reveal-button",
 		"chrisdias.promptboost",
-		// Github Copilot
+		// GitHub Copilot
 		"GitHub.copilot",
 		"GitHub.copilot-chat",
-		// Codex
+		// Codex（OpenAI）
 		"openai.chatgpt",
 		// Kilo Code
 		"kilocode.Kilo-Code",
 		// Roo Code
 		"RooVeterinaryInc.roo-cline",
-		// Amazon Developer Q
+		// Amazon Q Developer
 		"AmazonWebServices.amazon-q-vscode",
 		// Claude Code
 		"anthropic.claude-code"
 	],
       "settings": {
-		"debug.javascript.autoAttachFilter": "disabled", // fix running commands in integrated terminal
+		"debug.javascript.autoAttachFilter": "disabled", // 修复在集成终端中运行命令时的自动附加问题
 
-		// Specify settings for Github Copilot
+		// GitHub Copilot 的 Specify 设置
 		"git.autofetch": true,
 		"chat.promptFilesRecommendations": {
 			"speckit.constitution": true,
