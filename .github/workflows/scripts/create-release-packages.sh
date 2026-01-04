@@ -25,7 +25,7 @@ fi
 
 echo "正在为 $NEW_VERSION 构建 release 包"
 
-# Create and use .genreleases directory for all build artifacts
+# 创建并使用 .genreleases 目录存放所有构建产物
 GENRELEASES_DIR=".genreleases"
 mkdir -p "$GENRELEASES_DIR"
 rm -rf "$GENRELEASES_DIR"/* || true
@@ -127,24 +127,24 @@ build_variant() {
   echo "正在构建 $agent（$script）包..."
   mkdir -p "$base_dir"
   
-  # Copy base structure but filter scripts by variant
+  # 复制基础结构，但按变体过滤 scripts
   SPEC_DIR="$base_dir/.specify"
   mkdir -p "$SPEC_DIR"
   
   [[ -d memory ]] && { cp -r memory "$SPEC_DIR/"; echo "已复制 memory -> .specify"; }
   
-  # Only copy the relevant script variant directory
+  # 只复制对应的脚本变体目录
   if [[ -d scripts ]]; then
     mkdir -p "$SPEC_DIR/scripts"
     case $script in
       sh)
         [[ -d scripts/bash ]] && { cp -r scripts/bash "$SPEC_DIR/scripts/"; echo "已复制 scripts/bash -> .specify/scripts"; }
-        # Copy any script files that aren't in variant-specific directories
+        # 复制不在变体专用目录中的脚本文件
         find scripts -maxdepth 1 -type f -exec cp {} "$SPEC_DIR/scripts/" \; 2>/dev/null || true
         ;;
       ps)
         [[ -d scripts/powershell ]] && { cp -r scripts/powershell "$SPEC_DIR/scripts/"; echo "已复制 scripts/powershell -> .specify/scripts"; }
-        # Copy any script files that aren't in variant-specific directories
+        # 复制不在变体专用目录中的脚本文件
         find scripts -maxdepth 1 -type f -exec cp {} "$SPEC_DIR/scripts/" \; 2>/dev/null || true
         ;;
     esac
@@ -152,10 +152,10 @@ build_variant() {
   
   [[ -d templates ]] && { mkdir -p "$SPEC_DIR/templates"; find templates -type f -not -path "templates/commands/*" -not -name "vscode-settings.json" -exec cp --parents {} "$SPEC_DIR"/ \; ; echo "已复制 templates -> .specify/templates"; }
   
-  # NOTE: We substitute {ARGS} internally. Outward tokens differ intentionally:
-  #   * Markdown/prompt (claude, copilot, cursor-agent, opencode): $ARGUMENTS
-  #   * TOML (gemini, qwen): {{args}}
-  # This keeps formats readable without extra abstraction.
+  # 注意：我们在内部替换 {ARGS}。对外暴露的参数占位符会刻意区分：
+  #   * Markdown/prompt（claude、copilot、cursor-agent、opencode）：$ARGUMENTS
+  #   * TOML（gemini、qwen）：{{args}}
+  # 这样可保持格式可读性，避免引入额外抽象。
 
   case $agent in
     claude)
@@ -168,9 +168,9 @@ build_variant() {
     copilot)
       mkdir -p "$base_dir/.github/agents"
       generate_commands copilot agent.md "\$ARGUMENTS" "$base_dir/.github/agents" "$script"
-      # Generate companion prompt files
+      # 生成配套的 prompt 文件
       generate_copilot_prompts "$base_dir/.github/agents" "$base_dir/.github/prompts"
-      # Create VS Code workspace settings
+      # 创建 VS Code 工作区设置
       mkdir -p "$base_dir/.vscode"
       [[ -f templates/vscode-settings.json ]] && cp templates/vscode-settings.json "$base_dir/.vscode/settings.json"
       ;;
@@ -222,12 +222,12 @@ build_variant() {
   echo "已创建 $GENRELEASES_DIR/spec-kit-template-${agent}-${script}-${NEW_VERSION}.zip"
 }
 
-# Determine agent list
+# 确定 agent 列表
 ALL_AGENTS=(claude gemini copilot cursor-agent qwen opencode windsurf codex kilocode auggie roo codebuddy amp shai q bob qoder)
 ALL_SCRIPTS=(sh ps)
 
 norm_list() {
-  # convert comma+space separated -> line separated unique while preserving order of first occurrence
+  # 将“逗号/空格分隔”转换为“按行输出并去重”，同时保持首次出现的顺序
   tr ',\n' '  ' | awk '{for(i=1;i<=NF;i++){if(!seen[$i]++){printf((out?"\n":"") $i);out=1}}}END{printf("\n")}'
 }
 
@@ -238,7 +238,7 @@ validate_subset() {
     local found=0
     for a in "${allowed[@]}"; do [[ $it == "$a" ]] && { found=1; break; }; done
     if [[ $found -eq 0 ]]; then
-      echo "Error: unknown $type '$it' (allowed: ${allowed[*]})" >&2
+      echo "错误：未知 $type '$it'（允许值：${allowed[*]}）" >&2
       invalid=1
     fi
   done

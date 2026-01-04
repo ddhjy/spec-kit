@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# get-next-version.sh
+# 脚本：get-next-version.sh
 # 基于最新 git tag 计算下一个版本，并输出 GitHub Actions 变量
 # 用法：get-next-version.sh
 

@@ -55,7 +55,7 @@ source "$SCRIPT_DIR/common.sh"
 # 从共用函数获取所有路径与变量
 eval $(get_feature_paths)
 
-NEW_PLAN="$IMPL_PLAN"  # Alias for compatibility with existing code
+NEW_PLAN="$IMPL_PLAN"  # 为兼容既有代码的别名
 AGENT_TYPE="${1:-}"
 
 # 各 agent 的文件路径
@@ -214,13 +214,13 @@ format_technology_stack() {
     [[ -n "$lang" && "$lang" != "NEEDS CLARIFICATION" ]] && parts+=("$lang")
     [[ -n "$framework" && "$framework" != "NEEDS CLARIFICATION" && "$framework" != "N/A" ]] && parts+=("$framework")
     
-    # Join with proper formatting
+    # 按合适格式拼接
     if [[ ${#parts[@]} -eq 0 ]]; then
         echo ""
     elif [[ ${#parts[@]} -eq 1 ]]; then
         echo "${parts[0]}"
     else
-        # Join multiple parts with " + "
+        # 用 " + " 拼接多个部分
         local result="${parts[0]}"
         for ((i=1; i<${#parts[@]}; i++)); do
             result="$result + ${parts[i]}"
@@ -257,14 +257,14 @@ get_commands_for_language() {
             echo "npm test \\&\\& npm run lint"
             ;;
         *)
-            echo "# Add commands for $lang"
+            echo "# 为 $lang 添加命令"
             ;;
     esac
 }
 
 get_language_conventions() {
     local lang="$1"
-    echo "$lang: Follow standard conventions"
+    echo "$lang：遵循标准约定"
 }
 
 create_new_agent_file() {
@@ -290,7 +290,7 @@ create_new_agent_file() {
         return 1
     fi
     
-    # Replace template placeholders
+    # 替换模板占位符
     local project_structure
     project_structure=$(get_project_structure "$NEW_PROJECT_TYPE")
     
@@ -300,13 +300,13 @@ create_new_agent_file() {
     local language_conventions
     language_conventions=$(get_language_conventions "$NEW_LANG")
     
-    # Perform substitutions with error checking using safer approach
-    # Escape special characters for sed by using a different delimiter or escaping
+    # 使用更安全的方式执行替换，并做错误检查
+    # 为 sed 转义特殊字符（使用不同分隔符或进行转义）
     local escaped_lang=$(printf '%s\n' "$NEW_LANG" | sed 's/[\[\.*^$()+{}|]/\\&/g')
     local escaped_framework=$(printf '%s\n' "$NEW_FRAMEWORK" | sed 's/[\[\.*^$()+{}|]/\\&/g')
     local escaped_branch=$(printf '%s\n' "$CURRENT_BRANCH" | sed 's/[\[\.*^$()+{}|]/\\&/g')
     
-    # Build technology stack and recent change strings conditionally
+    # 按条件构建技术栈与最近变更字符串
     local tech_stack
     if [[ -n "$escaped_lang" && -n "$escaped_framework" ]]; then
         tech_stack="- $escaped_lang + $escaped_framework ($escaped_branch)"
@@ -366,7 +366,7 @@ update_existing_agent_file() {
     
     log_info "正在更新现有 agent 上下文文件……"
     
-    # Use a single temporary file for atomic update
+    # 使用单个临时文件进行原子更新
     local temp_file
     temp_file=$(mktemp) || {
         log_error "创建临时文件失败"
@@ -406,7 +406,7 @@ update_existing_agent_file() {
         has_recent_changes=1
     fi
     
-    # Process file line by line
+    # 逐行处理文件
     local in_tech_section=false
     local in_changes_section=false
     local tech_entries_added=false
@@ -415,13 +415,13 @@ update_existing_agent_file() {
     local file_ended=false
     
     while IFS= read -r line || [[ -n "$line" ]]; do
-        # Handle Active Technologies section
+        # 处理 Active Technologies 章节
         if [[ "$line" == "## Active Technologies" ]]; then
             echo "$line" >> "$temp_file"
             in_tech_section=true
             continue
         elif [[ $in_tech_section == true ]] && [[ "$line" =~ ^##[[:space:]] ]]; then
-            # Add new tech entries before closing the section
+            # 在结束章节前添加新的技术条目
             if [[ $tech_entries_added == false ]] && [[ ${#new_tech_entries[@]} -gt 0 ]]; then
                 printf '%s\n' "${new_tech_entries[@]}" >> "$temp_file"
                 tech_entries_added=true
@@ -430,7 +430,7 @@ update_existing_agent_file() {
             in_tech_section=false
             continue
         elif [[ $in_tech_section == true ]] && [[ -z "$line" ]]; then
-            # Add new tech entries before empty line in tech section
+            # 在技术章节的空行前添加新的技术条目
             if [[ $tech_entries_added == false ]] && [[ ${#new_tech_entries[@]} -gt 0 ]]; then
                 printf '%s\n' "${new_tech_entries[@]}" >> "$temp_file"
                 tech_entries_added=true
@@ -439,10 +439,10 @@ update_existing_agent_file() {
             continue
         fi
         
-        # Handle Recent Changes section
+        # 处理 Recent Changes 章节
         if [[ "$line" == "## Recent Changes" ]]; then
             echo "$line" >> "$temp_file"
-            # Add new change entry right after the heading
+            # 在标题后立即添加新的变更条目
             if [[ -n "$new_change_entry" ]]; then
                 echo "$new_change_entry" >> "$temp_file"
             fi
@@ -454,7 +454,7 @@ update_existing_agent_file() {
             in_changes_section=false
             continue
         elif [[ $in_changes_section == true ]] && [[ "$line" == "- "* ]]; then
-            # Keep only first 2 existing changes
+            # 仅保留前 2 条已有变更
             if [[ $existing_changes_count -lt 2 ]]; then
                 echo "$line" >> "$temp_file"
                 ((existing_changes_count++))
@@ -470,7 +470,7 @@ update_existing_agent_file() {
         fi
     done < "$target_file"
     
-    # Post-loop check: if we're still in the Active Technologies section and haven't added new entries
+    # 循环后检查：若仍处于 Active Technologies 段且未添加新条目
     if [[ $in_tech_section == true ]] && [[ $tech_entries_added == false ]] && [[ ${#new_tech_entries[@]} -gt 0 ]]; then
         printf '%s\n' "${new_tech_entries[@]}" >> "$temp_file"
         tech_entries_added=true
@@ -491,7 +491,7 @@ update_existing_agent_file() {
         changes_entries_added=true
     fi
     
-    # Move temp file to target atomically
+    # 原子方式将临时文件移动为目标文件
     if ! mv "$temp_file" "$target_file"; then
         log_error "更新目标文件失败"
         rm -f "$temp_file"
@@ -531,7 +531,7 @@ update_agent_file() {
     fi
     
     if [[ ! -f "$target_file" ]]; then
-        # Create new file from template
+        # 基于模板创建新文件
         local temp_file
         temp_file=$(mktemp) || {
             log_error "创建临时文件失败"
@@ -552,7 +552,7 @@ update_agent_file() {
             return 1
         fi
     else
-        # Update existing file
+        # 更新已有文件
         if [[ ! -r "$target_file" ]]; then
             log_error "无法读取已有文件：$target_file"
             return 1
@@ -644,7 +644,7 @@ update_specific_agent() {
 update_all_existing_agents() {
     local found_agent=false
     
-    # Check each possible agent file and update if it exists
+    # 检查每种 agent 文件：若存在则更新
     if [[ -f "$CLAUDE_FILE" ]]; then
         update_agent_file "$CLAUDE_FILE" "Claude Code"
         found_agent=true
@@ -720,7 +720,7 @@ update_all_existing_agents() {
         found_agent=true
     fi
     
-    # If no agent files exist, create a default Claude file
+    # 若不存在任何 agent 文件，则创建默认 Claude 文件
     if [[ "$found_agent" == false ]]; then
         log_info "未找到已存在的 agent 文件，正在创建默认 Claude 文件……"
         update_agent_file "$CLAUDE_FILE" "Claude Code"
@@ -752,28 +752,28 @@ print_summary() {
 #==============================================================================
 
 main() {
-    # Validate environment before proceeding
+    # 执行前先校验环境
     validate_environment
     
     log_info "=== 正在为 feature $CURRENT_BRANCH 更新 agent 上下文文件 ==="
     
-    # Parse the plan file to extract project information
+    # 解析 plan 文件以提取项目信息
     if ! parse_plan_data "$NEW_PLAN"; then
         log_error "解析 plan 数据失败"
         exit 1
     fi
     
-    # Process based on agent type argument
+    # 根据 agent 类型参数进行处理
     local success=true
     
     if [[ -z "$AGENT_TYPE" ]]; then
-        # No specific agent provided - update all existing agent files
+        # 未指定 agent：更新所有已存在的 agent 文件
         log_info "未指定 agent，正在更新所有已存在的 agent 文件……"
         if ! update_all_existing_agents; then
             success=false
         fi
     else
-        # Specific agent provided - update only that agent
+        # 指定了 agent：只更新该 agent
         log_info "正在更新指定 agent：$AGENT_TYPE"
         if ! update_specific_agent "$AGENT_TYPE"; then
             success=false

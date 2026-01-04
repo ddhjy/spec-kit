@@ -128,7 +128,7 @@ function Extract-PlanField {
         [string]$PlanFile
     )
     if (-not (Test-Path $PlanFile)) { return '' }
-    # Lines like **Language/Version**: Python 3.12
+    # 形如 **Language/Version**: Python 3.12 的行
     $regex = "^\*\*$([Regex]::Escape($FieldPattern))\*\*: (.+)$"
     Get-Content -LiteralPath $PlanFile -Encoding utf8 | ForEach-Object {
         if ($_ -match $regex) { 
@@ -197,7 +197,7 @@ function Get-LanguageConventions {
         [Parameter(Mandatory=$false)]
         [string]$Lang
     )
-    if ($Lang) { "${Lang}: Follow standard conventions" } else { 'General: Follow standard conventions' } 
+    if ($Lang) { "${Lang}：遵循标准约定" } else { '通用：遵循标准约定' }
 }
 
 function New-AgentFile {
@@ -225,7 +225,7 @@ function New-AgentFile {
     $content = $content -replace '\[PROJECT NAME\]',$ProjectName
     $content = $content -replace '\[DATE\]',$Date.ToString('yyyy-MM-dd')
     
-    # Build the technology stack string safely
+    # 安全构造技术栈字符串
     $techStackForTemplate = ""
     if ($escaped_lang -and $escaped_framework) {
         $techStackForTemplate = "- $escaped_lang + $escaped_framework ($escaped_branch)"
@@ -236,14 +236,14 @@ function New-AgentFile {
     }
     
     $content = $content -replace '\[EXTRACTED FROM ALL PLAN.MD FILES\]',$techStackForTemplate
-    # For project structure we manually embed (keep newlines)
+    # 对项目结构我们手工嵌入（保留换行）
     $escapedStructure = [Regex]::Escape($projectStructure)
     $content = $content -replace '\[ACTUAL STRUCTURE FROM PLANS\]',$escapedStructure
-    # Replace escaped newlines placeholder after all replacements
+    # 在所有替换完成后，再替换“转义换行”占位符
     $content = $content -replace '\[ONLY COMMANDS FOR ACTIVE TECHNOLOGIES\]',$commands
     $content = $content -replace '\[LANGUAGE-SPECIFIC, ONLY FOR LANGUAGES IN USE\]',$languageConventions
     
-    # Build the recent changes string safely
+    # 安全构造“最近变更”字符串
     $recentChangesForTemplate = ""
     if ($escaped_lang -and $escaped_framework) {
         $recentChangesForTemplate = "- ${escaped_branch}：新增 ${escaped_lang} + ${escaped_framework}"
@@ -254,7 +254,7 @@ function New-AgentFile {
     }
     
     $content = $content -replace '\[LAST 3 FEATURES AND WHAT THEY ADDED\]',$recentChangesForTemplate
-    # Convert literal \n sequences introduced by Escape to real newlines
+    # 将 Escape 引入的字面量 \n 序列转换为真实换行
     $content = $content -replace '\\n',[Environment]::NewLine
 
     $parent = Split-Path -Parent $TargetFile
@@ -328,7 +328,7 @@ function Update-ExistingAgentFile {
         $output.Add($line)
     }
 
-    # Post-loop check: if we're still in the Active Technologies section and haven't added new entries
+    # 循环后检查：若仍处于 Active Technologies 段且未添加新条目
     if ($inTech -and -not $techAdded -and $newTechEntries.Count -gt 0) {
         $newTechEntries | ForEach-Object { $output.Add($_) }
     }

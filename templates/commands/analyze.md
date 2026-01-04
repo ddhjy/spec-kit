@@ -73,7 +73,7 @@ $ARGUMENTS
 
 - **需求清单（requirements inventory）**：每条功能/非功能需求生成稳定 key（从祈使句生成 slug；例如 "User can upload file" → `user-can-upload-file`）
 - **用户故事/动作清单**：离散用户动作及其验收标准
-- **任务覆盖映射（task coverage mapping）**：将每个任务映射到一个或多个需求/故事（基于关键词推断或显式引用，如 ID/关键短语）
+- **任务覆盖映射**：将每个任务映射到一个或多个需求/故事（基于关键词推断或显式引用，如 ID/关键短语）
 - **原则集合（constitution rule set）**：提取原则名称与 MUST/SHOULD 等规范性表述
 
 ### 4. 检测扫描（Token 高效）
@@ -149,9 +149,9 @@ $ARGUMENTS
 - 需求总数（Total Requirements）
 - 任务总数（Total Tasks）
 - 覆盖率（Coverage %：至少有 1 个任务的需求占比）
-- 歧义数量（Ambiguity Count）
-- 重复数量（Duplication Count）
-- Critical 问题数量（Critical Issues Count）
+- 歧义数量
+- 重复数量
+- CRITICAL 问题数量
 
 ### 7. 给出下一步动作
 

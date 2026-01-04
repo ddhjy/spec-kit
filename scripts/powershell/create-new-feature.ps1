@@ -51,7 +51,7 @@ function Find-RepositoryRoot {
         }
         $parent = Split-Path $current -Parent
         if ($parent -eq $current) {
-            # Reached filesystem root without finding markers
+            # 已到达文件系统根目录，但未找到任何标记
             return $null
         }
         $current = $parent
@@ -81,10 +81,10 @@ function Get-HighestNumberFromBranches {
         $branches = git branch -a 2>$null
         if ($LASTEXITCODE -eq 0) {
             foreach ($branch in $branches) {
-                # Clean branch name: remove leading markers and remote prefixes
+                # 清洗分支名：移除前缀标记与远端前缀
                 $cleanBranch = $branch.Trim() -replace '^\*?\s+', '' -replace '^remotes/[^/]+/', ''
                 
-                # Extract feature number if branch matches pattern ###-*
+                # 若分支匹配 ###-* 模式，则提取 feature 编号
                 if ($cleanBranch -match '^(\d+)-') {
                     $num = [int]$matches[1]
                     if ($num -gt $highest) { $highest = $num }
@@ -92,7 +92,7 @@ function Get-HighestNumberFromBranches {
             }
         }
     } catch {
-        # If git command fails, return 0
+        # 若 git 命令失败，则返回 0
         Write-Verbose "Could not check Git branches: $_"
     }
     return $highest
@@ -103,23 +103,23 @@ function Get-NextBranchNumber {
         [string]$SpecsDir
     )
 
-    # Fetch all remotes to get latest branch info (suppress errors if no remotes)
+    # 拉取所有远端以获取最新分支信息（若无远端则忽略错误）
     try {
         git fetch --all --prune 2>$null | Out-Null
     } catch {
-        # Ignore fetch errors
+        # 忽略 fetch 错误
     }
 
-    # Get highest number from ALL branches (not just matching short name)
+    # 从所有分支中取最大编号（不只匹配 short name）
     $highestBranch = Get-HighestNumberFromBranches
 
-    # Get highest number from ALL specs (not just matching short name)
+    # 从所有 specs 中取最大编号（不只匹配 short name）
     $highestSpec = Get-HighestNumberFromSpecs -SpecsDir $SpecsDir
 
-    # Take the maximum of both
+    # 取两者的最大值
     $maxNum = [Math]::Max($highestBranch, $highestSpec)
 
-    # Return next number
+    # 返回下一个编号
     return $maxNum + 1
 }
 

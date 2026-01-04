@@ -101,7 +101,7 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME
 使用 **`/speckit.constitution`** 命令来创建项目的治理原则与开发指南，它们会指导后续所有开发工作。
 
 ```bash
-/speckit.constitution Create principles focused on code quality, testing standards, user experience consistency, and performance requirements
+/speckit.constitution 创建一套项目原则，重点关注代码质量、测试标准、用户体验一致性与性能要求
 ```
 
 ### 3. 创建规格说明（spec）
@@ -109,7 +109,7 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME
 使用 **`/speckit.specify`** 命令描述你想构建什么。请聚焦 **做什么（what）** 和 **为什么（why）**，先不要纠结技术栈。
 
 ```bash
-/speckit.specify Build an application that can help me organize my photos in separate photo albums. Albums are grouped by date and can be re-organized by dragging and dropping on the main page. Albums are never in other nested albums. Within each album, photos are previewed in a tile-like interface.
+/speckit.specify 构建一个应用，帮助我把照片整理到不同的相册中。相册按日期分组，并且可以在主页面通过拖拽来重新排序。相册不会嵌套在其他相册之下。每个相册内，照片以类似瓷砖网格的方式预览展示。
 ```
 
 ### 4. 创建技术实现计划（plan）
@@ -117,7 +117,7 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME
 使用 **`/speckit.plan`** 命令提供你的技术栈与架构选择。
 
 ```bash
-/speckit.plan The application uses Vite with minimal number of libraries. Use vanilla HTML, CSS, and JavaScript as much as possible. Images are not uploaded anywhere and metadata is stored in a local SQLite database.
+/speckit.plan 该应用使用 Vite，并尽量减少第三方库。尽可能使用原生 HTML、CSS 与 JavaScript。图片不上传到任何地方，元数据存储在本地 SQLite 数据库中。
 ```
 
 ### 5. 拆分为任务（tasks）
@@ -413,7 +413,7 @@ specify init <project_name> --ai claude --ignore-agent-tools
 
 进入项目目录并运行你的 AI agent。下面示例使用 `claude`。
 
-![Bootstrapping Claude Code environment](./media/bootstrap-claude-code.gif)
+![引导初始化 Claude Code 环境](./media/bootstrap-claude-code.gif)
 
 如果你能看到 `/speckit.constitution`、`/speckit.specify`、`/speckit.plan`、`/speckit.tasks`、`/speckit.implement` 这些命令可用，就说明配置正常。
 
@@ -500,9 +500,7 @@ specify init <project_name> --ai claude --ignore-agent-tools
 现在你可以明确技术栈与其他技术要求。你可以用项目模板内置的 `/speckit.plan` 命令，配合类似以下提示词：
 
 ```text
-We are going to generate this using .NET Aspire, using Postgres as the database. The frontend should use
-Blazor server with drag-and-drop task boards, real-time updates. There should be a REST API created with a projects API,
-tasks API, and a notifications API.
+我们将使用 .NET Aspire 来生成该项目，数据库使用 Postgres。前端应使用 Blazor Server，并支持拖拽式任务看板与实时更新。需要创建一个 REST API，包含 projects API、tasks API 与 notifications API。
 ```
 
 这一步会输出多个实现细节文档，目录结构应类似：
@@ -540,11 +538,7 @@ tasks API, and a notifications API.
 另外，如果所选技术栈变化很快（例如 .NET Aspire、某些 JS 框架），你也可以让 Claude Code 进一步调研，示例提示词如下：
 
 ```text
-I want you to go through the implementation plan and implementation details, looking for areas that could
-benefit from additional research as .NET Aspire is a rapidly changing library. For those areas that you identify that
-require further research, I want you to update the research document with additional details about the specific
-versions that we are going to be using in this Taskify application and spawn parallel research tasks to clarify
-any details using research from the web.
+请你通读实现计划与实现细节，找出那些可能需要额外调研的部分——因为 .NET Aspire 变化很快。对于你识别出的需要进一步调研的点，请更新 research 文档，补充 Taskify 将使用的具体版本信息，并并行启动多个调研任务，用网络资料澄清细节。
 ```
 
 在这个过程中，你可能会发现 Claude Code 卡在了错误的调研方向上——你可以用如下提示词把它拉回正确路径：

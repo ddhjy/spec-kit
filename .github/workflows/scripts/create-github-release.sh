@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# create-github-release.sh
+# 脚本：create-github-release.sh
 # 使用所有模板 zip 文件创建 GitHub release
 # 用法：create-github-release.sh <version>
 

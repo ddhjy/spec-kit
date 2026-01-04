@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# generate-release-notes.sh
+# 脚本：generate-release-notes.sh
 # 基于 git 历史生成 release notes
 # 用法：generate-release-notes.sh <new_version> <last_tag>
 

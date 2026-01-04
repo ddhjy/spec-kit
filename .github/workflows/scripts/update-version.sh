@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# update-version.sh
+# 脚本：update-version.sh
 # 更新 pyproject.toml 中的版本（仅用于 release 产物）
 # 用法：update-version.sh <version>
 
