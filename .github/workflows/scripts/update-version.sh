@@ -2,22 +2,22 @@
 set -euo pipefail
 
 # update-version.sh
-# Update version in pyproject.toml (for release artifacts only)
-# Usage: update-version.sh <version>
+# 更新 pyproject.toml 中的版本（仅用于 release 产物）
+# 用法：update-version.sh <version>
 
 if [[ $# -ne 1 ]]; then
-  echo "Usage: $0 <version>" >&2
+  echo "用法：$0 <version>" >&2
   exit 1
 fi
 
 VERSION="$1"
 
-# Remove 'v' prefix for Python versioning
+# 为 Python 版本号移除 'v' 前缀
 PYTHON_VERSION=${VERSION#v}
 
 if [ -f "pyproject.toml" ]; then
   sed -i "s/version = \".*\"/version = \"$PYTHON_VERSION\"/" pyproject.toml
-  echo "Updated pyproject.toml version to $PYTHON_VERSION (for release artifacts only)"
+  echo "已将 pyproject.toml 版本更新为 $PYTHON_VERSION（仅用于 release 产物）"
 else
-  echo "Warning: pyproject.toml not found, skipping version update"
+  echo "警告：未找到 pyproject.toml，跳过版本更新"
 fi

@@ -1,24 +1,24 @@
-# Installation Guide
+# 安装指南
 
-## Prerequisites
+## 前置条件
 
-- **Linux/macOS** (or Windows; PowerShell scripts now supported without WSL)
-- AI coding agent: [Claude Code](https://www.anthropic.com/claude-code), [GitHub Copilot](https://code.visualstudio.com/), [Codebuddy CLI](https://www.codebuddy.ai/cli) or [Gemini CLI](https://github.com/google-gemini/gemini-cli)
-- [uv](https://docs.astral.sh/uv/) for package management
+- **Linux/macOS**（或 Windows；现已支持 PowerShell 脚本，无需 WSL）
+- AI coding agent：[Claude Code](https://www.anthropic.com/claude-code)、[GitHub Copilot](https://code.visualstudio.com/)、[Codebuddy CLI](https://www.codebuddy.ai/cli) 或 [Gemini CLI](https://github.com/google-gemini/gemini-cli)
+- 用于包管理的 [uv](https://docs.astral.sh/uv/)
 - [Python 3.11+](https://www.python.org/downloads/)
 - [Git](https://git-scm.com/downloads)
 
-## Installation
+## 安装
 
-### Initialize a New Project
+### 初始化一个新项目
 
-The easiest way to get started is to initialize a new project:
+最简单的开始方式是初始化一个新项目：
 
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME>
 ```
 
-Or initialize in the current directory:
+或者在当前目录初始化：
 
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init .
@@ -26,9 +26,9 @@ uvx --from git+https://github.com/github/spec-kit.git specify init .
 uvx --from git+https://github.com/github/spec-kit.git specify init --here
 ```
 
-### Specify AI Agent
+### 指定 AI Agent
 
-You can proactively specify your AI agent during initialization:
+你可以在初始化时直接指定要使用的 AI agent：
 
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name> --ai claude
@@ -37,56 +37,56 @@ uvx --from git+https://github.com/github/spec-kit.git specify init <project_name
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name> --ai codebuddy
 ```
 
-### Specify Script Type (Shell vs PowerShell)
+### 指定脚本类型（Shell vs PowerShell）
 
-All automation scripts now have both Bash (`.sh`) and PowerShell (`.ps1`) variants.
+所有自动化脚本现在都同时提供 Bash（`.sh`）与 PowerShell（`.ps1`）版本。
 
-Auto behavior:
+自动选择规则：
 
-- Windows default: `ps`
-- Other OS default: `sh`
-- Interactive mode: you'll be prompted unless you pass `--script`
+- Windows 默认：`ps`
+- 其他系统默认：`sh`
+- 交互模式：若未传 `--script` 会提示你选择
 
-Force a specific script type:
+强制指定脚本类型：
 
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name> --script sh
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name> --script ps
 ```
 
-### Ignore Agent Tools Check
+### 忽略 Agent 工具检查
 
-If you prefer to get the templates without checking for the right tools:
+如果你只想获取模板而不检查是否安装了对应工具：
 
 ```bash
 uvx --from git+https://github.com/github/spec-kit.git specify init <project_name> --ai claude --ignore-agent-tools
 ```
 
-## Verification
+## 验证
 
-After initialization, you should see the following commands available in your AI agent:
+初始化完成后，你应该能在 AI agent 中看到以下命令：
 
-- `/speckit.specify` - Create specifications
-- `/speckit.plan` - Generate implementation plans  
-- `/speckit.tasks` - Break down into actionable tasks
+- `/speckit.specify`：创建规格说明
+- `/speckit.plan`：生成实现计划
+- `/speckit.tasks`：拆分为可执行任务
 
-The `.specify/scripts` directory will contain both `.sh` and `.ps1` scripts.
+`.specify/scripts` 目录将同时包含 `.sh` 与 `.ps1` 脚本。
 
-## Troubleshooting
+## 故障排查
 
-### Git Credential Manager on Linux
+### Linux 上的 Git Credential Manager
 
-If you're having issues with Git authentication on Linux, you can install Git Credential Manager:
+如果你在 Linux 上遇到 Git 认证问题，可以安装 Git Credential Manager：
 
 ```bash
 #!/usr/bin/env bash
 set -e
-echo "Downloading Git Credential Manager v2.6.1..."
+echo "正在下载 Git Credential Manager v2.6.1..."
 wget https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.6.1/gcm-linux_amd64.2.6.1.deb
-echo "Installing Git Credential Manager..."
+echo "正在安装 Git Credential Manager..."
 sudo dpkg -i gcm-linux_amd64.2.6.1.deb
-echo "Configuring Git to use GCM..."
+echo "正在配置 Git 使用 GCM..."
 git config --global credential.helper manager
-echo "Cleaning up..."
+echo "正在清理..."
 rm gcm-linux_amd64.2.6.1.deb
 ```

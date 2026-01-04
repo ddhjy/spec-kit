@@ -1,67 +1,67 @@
 # Spec Kit
 
-*Build high-quality software faster.*
+*更快构建高质量软件。*
 
-**An effort to allow organizations to focus on product scenarios rather than writing undifferentiated code with the help of Spec-Driven Development.**
+**借助规格驱动开发（SDD），让组织把精力聚焦在产品场景上，而不是编写缺乏差异化的通用代码。**
 
-## What is Spec-Driven Development?
+## 什么是规格驱动开发（Spec-Driven Development）？
 
-Spec-Driven Development **flips the script** on traditional software development. For decades, code has been king — specifications were just scaffolding we built and discarded once the "real work" of coding began. Spec-Driven Development changes this: **specifications become executable**, directly generating working implementations rather than just guiding them.
+规格驱动开发（SDD）对传统软件开发做了**权力反转**。几十年来代码一直是“王”：规格说明只是脚手架，一旦真正的编码工作开始就被丢弃。SDD 改变了这一点：**规格说明变为可执行产物**——它不只是指导实现，而是能直接生成可运行的实现。
 
-## Getting Started
+## 快速开始
 
-- [Installation Guide](installation.md)
-- [Quick Start Guide](quickstart.md)
-- [Upgrade Guide](upgrade.md)
-- [Local Development](local-development.md)
+- [安装指南](installation.md)
+- [快速开始指南](quickstart.md)
+- [升级指南](upgrade.md)
+- [本地开发](local-development.md)
 
-## Core Philosophy
+## 核心理念
 
-Spec-Driven Development is a structured process that emphasizes:
+规格驱动开发（SDD）是一套结构化流程，强调：
 
-- **Intent-driven development** where specifications define the "*what*" before the "*how*"
-- **Rich specification creation** using guardrails and organizational principles
-- **Multi-step refinement** rather than one-shot code generation from prompts
-- **Heavy reliance** on advanced AI model capabilities for specification interpretation
+- **意图驱动开发**：先由规格说明定义“做什么（what）”，再决定“如何做（how）”
+- **高质量规格说明**：用护栏与组织原则来约束与引导规格编写
+- **多步骤精炼**：而非靠一次提示词就生成全部代码
+- **充分利用**：先进 AI 模型对规格理解与解释的能力
 
-## Development Phases
+## 开发阶段
 
-| Phase | Focus | Key Activities |
-|-------|-------|----------------|
-| **0-to-1 Development** ("Greenfield") | Generate from scratch | <ul><li>Start with high-level requirements</li><li>Generate specifications</li><li>Plan implementation steps</li><li>Build production-ready applications</li></ul> |
-| **Creative Exploration** | Parallel implementations | <ul><li>Explore diverse solutions</li><li>Support multiple technology stacks & architectures</li><li>Experiment with UX patterns</li></ul> |
-| **Iterative Enhancement** ("Brownfield") | Brownfield modernization | <ul><li>Add features iteratively</li><li>Modernize legacy systems</li><li>Adapt processes</li></ul> |
+| 阶段 | 关注点 | 关键活动 |
+|------|--------|----------|
+| **从 0 到 1**（Greenfield） | 从零生成 | <ul><li>从高层需求开始</li><li>生成规格说明</li><li>规划实现步骤</li><li>构建可用于生产的应用</li></ul> |
+| **创意探索** | 并行实现 | <ul><li>探索多样化方案</li><li>支持多种技术栈与架构</li><li>试验不同的 UX 模式</li></ul> |
+| **迭代增强**（Brownfield） | 既有系统现代化改造 | <ul><li>迭代添加功能</li><li>现代化改造遗留系统</li><li>调整流程</li></ul> |
 
-## Experimental Goals
+## 实验性目标
 
-Our research and experimentation focus on:
+我们的研究与实验聚焦于：
 
-### Technology Independence
+### 技术无关性
 
-- Create applications using diverse technology stacks
-- Validate the hypothesis that Spec-Driven Development is a process not tied to specific technologies, programming languages, or frameworks
+- 用多样的技术栈创建应用
+- 验证一个假设：SDD 是一种流程方法论，不绑定特定技术、编程语言或框架
 
-### Enterprise Constraints
+### 企业约束
 
-- Demonstrate mission-critical application development
-- Incorporate organizational constraints (cloud providers, tech stacks, engineering practices)
-- Support enterprise design systems and compliance requirements
+- 展示任务关键型应用的开发能力
+- 融入组织约束（云厂商、技术栈、工程实践）
+- 支持企业级设计系统与合规要求
 
-### User-Centric Development
+### 以用户为中心的开发
 
-- Build applications for different user cohorts and preferences
-- Support various development approaches (from vibe-coding to AI-native development)
+- 面向不同用户群体与偏好构建应用
+- 支持多种开发方式（从随性写代码到 AI 原生开发）
 
-### Creative & Iterative Processes
+### 创意与迭代流程
 
-- Validate the concept of parallel implementation exploration
-- Provide robust iterative feature development workflows
-- Extend processes to handle upgrades and modernization tasks
+- 验证“并行实现探索”的概念
+- 提供可靠的迭代式功能开发工作流
+- 将流程扩展到升级与现代化改造任务
 
-## Contributing
+## 参与贡献
 
-Please see our [Contributing Guide](https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md) for information on how to contribute to this project.
+如何为本项目做贡献，请参阅[贡献指南](https://github.com/github/spec-kit/blob/main/CONTRIBUTING.md)。
 
-## Support
+## 支持
 
-For support, please check our [Support Guide](https://github.com/github/spec-kit/blob/main/SUPPORT.md) or open an issue on GitHub.
+如需支持，请查看[支持指南](https://github.com/github/spec-kit/blob/main/SUPPORT.md)，或在 GitHub 上提交 issue。

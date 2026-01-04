@@ -1,74 +1,46 @@
-# Contributor Covenant Code of Conduct
+# 贡献者公约（Contributor Covenant）行为准则
 
-## Our Pledge
+## 我们的承诺
 
-In the interest of fostering an open and welcoming environment, we as
-contributors and maintainers pledge to making participation in our project and
-our community a harassment-free experience for everyone, regardless of age, body
-size, disability, ethnicity, gender identity and expression, level of experience,
-nationality, personal appearance, race, religion, or sexual identity and
-orientation.
+为营造开放、友好的环境，我们作为贡献者与维护者承诺：让每个人在参与本项目与社区时都能获得免于骚扰的体验，不因年龄、体型、残障、民族、性别认同与表达、经验水平、国籍、外貌、种族、宗教、性取向与性别取向等因素而受到区别对待。
 
-## Our Standards
+## 我们的标准
 
-Examples of behavior that contributes to creating a positive environment
-include:
+有助于营造积极环境的行为示例包括：
 
-- Using welcoming and inclusive language
-- Being respectful of differing viewpoints and experiences
-- Gracefully accepting constructive criticism
-- Focusing on what is best for the community
-- Showing empathy towards other community members
+- 使用友好、包容的语言
+- 尊重不同的观点与经历
+- 以平和方式接受建设性批评
+- 以社区最佳利益为出发点
+- 对其他社区成员保持同理心
 
-Examples of unacceptable behavior by participants include:
+参与者不可接受的行为示例包括：
 
-- The use of sexualized language or imagery and unwelcome sexual attention or
-  advances
-- Trolling, insulting/derogatory comments, and personal or political attacks
-- Public or private harassment
-- Publishing others' private information, such as a physical or electronic
-  address, without explicit permission
-- Other conduct which could reasonably be considered inappropriate in a
-  professional setting
+- 使用性暗示语言或图像，以及不受欢迎的性关注或示好
+- 恶意挑衅（trolling）、侮辱/贬损性评论、人身攻击或政治攻击
+- 公开或私下的骚扰行为
+- 未经明确许可公开他人的隐私信息，例如住址或电子邮箱地址
+- 其他在职业环境中可被合理认为不恰当的行为
 
-## Our Responsibilities
+## 我们的责任
 
-Project maintainers are responsible for clarifying the standards of acceptable
-behavior and are expected to take appropriate and fair corrective action in
-response to any instances of unacceptable behavior.
+项目维护者负责澄清可接受行为的标准，并应对任何不可接受行为采取适当且公平的纠正措施。
 
-Project maintainers have the right and responsibility to remove, edit, or
-reject comments, commits, code, wiki edits, issues, and other contributions
-that are not aligned to this Code of Conduct, or to ban temporarily or
-permanently any contributor for other behaviors that they deem inappropriate,
-threatening, offensive, or harmful.
+项目维护者有权也有责任移除、编辑或拒绝不符合本行为准则的评论、提交（commit）、代码、wiki 修改、issue 与其他贡献；也可以因其认为不当、威胁、冒犯或有害的行为而对贡献者进行临时或永久封禁。
 
-## Scope
+## 适用范围
 
-This Code of Conduct applies both within project spaces and in public spaces
-when an individual is representing the project or its community. Examples of
-representing a project or community include using an official project e-mail
-address, posting via an official social media account, or acting as an appointed
-representative at an online or offline event. Representation of a project may be
-further defined and clarified by project maintainers.
+本行为准则既适用于项目空间内，也适用于在公共空间中代表本项目或社区的个人行为。代表项目或社区的情形包括使用项目官方邮箱、通过官方社交媒体账号发言，或作为指定代表参与线上/线下活动等。维护者可进一步定义并澄清何谓“代表项目”。
 
-## Enforcement
+## 执行
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported by contacting the project team at <opensource@github.com>. All
-complaints will be reviewed and investigated and will result in a response that
-is deemed necessary and appropriate to the circumstances. The project team is
-obligated to maintain confidentiality with regard to the reporter of an incident.
-Further details of specific enforcement policies may be posted separately.
+如发生辱骂、骚扰或其他不可接受行为，可通过联系项目团队 <opensource@github.com> 进行报告。所有投诉都会被审阅与调查，并在必要且适当的范围内作出响应。项目团队有义务对事件报告者的身份信息保密。具体执行细则可能会另行发布。
 
-Project maintainers who do not follow or enforce the Code of Conduct in good
-faith may face temporary or permanent repercussions as determined by other
-members of the project's leadership.
+未能以善意遵守或执行本行为准则的项目维护者，可能会受到由项目领导层其他成员决定的临时或永久处分。
 
-## Attribution
+## 致谢与来源
 
-This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4,
-available at [http://contributor-covenant.org/version/1/4][version]
+本行为准则改编自 [Contributor Covenant][homepage] 1.4 版，原文见 [http://contributor-covenant.org/version/1/4][version]。
 
 [homepage]: http://contributor-covenant.org
 [version]: http://contributor-covenant.org/version/1/4/

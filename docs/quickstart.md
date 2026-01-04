@@ -1,164 +1,159 @@
-# Quick Start Guide
+# 快速开始指南
 
-This guide will help you get started with Spec-Driven Development using Spec Kit.
+本指南将帮助你使用 Spec Kit 快速上手规格驱动开发（SDD）。
 
 > [!NOTE]
-> All automation scripts now provide both Bash (`.sh`) and PowerShell (`.ps1`) variants. The `specify` CLI auto-selects based on OS unless you pass `--script sh|ps`.
+> 所有自动化脚本现在都同时提供 Bash（`.sh`）与 PowerShell（`.ps1`）版本。`specify` CLI 会根据操作系统自动选择，除非你显式传入 `--script sh|ps`。
 
-## The 6-Step Process
+## 六步流程
 
 > [!TIP]
-> **Context Awareness**: Spec Kit commands automatically detect the active feature based on your current Git branch (e.g., `001-feature-name`). To switch between different specifications, simply switch Git branches.
+> **上下文感知**：Spec Kit 命令会根据你当前的 Git 分支（例如 `001-feature-name`）自动识别正在工作的 feature。要切换到不同规格说明，只需要切换 Git 分支即可。
 
-### Step 1: Install Specify
+### 步骤 1：安装/初始化 Specify
 
-**In your terminal**, run the `specify` CLI command to initialize your project:
+**在终端中**运行 `specify` CLI 来初始化项目：
 
 ```bash
-# Create a new project directory
+# 创建一个新项目目录
 uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME>
 
-# OR initialize in the current directory
+# 或在当前目录初始化
 uvx --from git+https://github.com/github/spec-kit.git specify init .
 ```
 
-Pick script type explicitly (optional):
+（可选）显式指定脚本类型：
 
 ```bash
-uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME> --script ps  # Force PowerShell
-uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME> --script sh  # Force POSIX shell
+uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME> --script ps  # 强制使用 PowerShell
+uvx --from git+https://github.com/github/spec-kit.git specify init <PROJECT_NAME> --script sh  # 强制使用 POSIX shell
 ```
 
-### Step 2: Define Your Constitution
+### 步骤 2：定义你的 Constitution（项目原则）
 
-**In your AI Agent's chat interface**, use the `/speckit.constitution` slash command to establish the core rules and principles for your project. You should provide your project's specific principles as arguments.
+**在 AI agent 的聊天界面中**，使用 `/speckit.constitution` slash command 建立项目的核心规则与原则。你应把项目的具体原则作为参数传入。
 
 ```markdown
-/speckit.constitution This project follows a "Library-First" approach. All features must be implemented as standalone libraries first. We use TDD strictly. We prefer functional programming patterns.
+/speckit.constitution 本项目采用“库优先（Library-First）”方式。所有功能必须先实现为独立库。严格遵循 TDD。优先采用函数式编程模式。
 ```
 
-### Step 3: Create the Spec
+### 步骤 3：创建规格说明（Spec）
 
-**In the chat**, use the `/speckit.specify` slash command to describe what you want to build. Focus on the **what** and **why**, not the tech stack.
+**在聊天中**，使用 `/speckit.specify` slash command 描述你想构建什么。请聚焦 **做什么（what）** 与 **为什么（why）**，先不要关注技术栈。
 
 ```markdown
-/speckit.specify Build an application that can help me organize my photos in separate photo albums. Albums are grouped by date and can be re-organized by dragging and dropping on the main page. Albums are never in other nested albums. Within each album, photos are previewed in a tile-like interface.
+/speckit.specify 构建一个应用，帮助我把照片整理到不同相册中。相册按日期分组，并且可以在主页面通过拖拽重新排序。相册不会嵌套在其他相册里。每个相册内用类似瓷砖的界面预览照片。
 ```
 
-### Step 4: Refine the Spec
+### 步骤 4：精炼规格说明
 
-**In the chat**, use the `/speckit.clarify` slash command to identify and resolve ambiguities in your specification. You can provide specific focus areas as arguments.
+**在聊天中**，使用 `/speckit.clarify` slash command 识别并解决规格说明中的歧义。你可以把关注点作为参数传入。
 
 ```bash
-/speckit.clarify Focus on security and performance requirements.
+/speckit.clarify 请重点关注安全与性能需求。
 ```
 
-### Step 5: Create a Technical Implementation Plan
+### 步骤 5：创建技术实现计划
 
-**In the chat**, use the `/speckit.plan` slash command to provide your tech stack and architecture choices.
+**在聊天中**，使用 `/speckit.plan` slash command 提供你的技术栈与架构选择。
 
 ```markdown
-/speckit.plan The application uses Vite with minimal number of libraries. Use vanilla HTML, CSS, and JavaScript as much as possible. Images are not uploaded anywhere and metadata is stored in a local SQLite database.
+/speckit.plan 应用使用 Vite，并尽量减少依赖库。尽可能使用原生 HTML、CSS、JavaScript。图片不上传到任何地方，元数据存储在本地 SQLite 数据库。
 ```
 
-### Step 6: Break Down and Implement
+### 步骤 6：拆分任务并实现
 
-**In the chat**, use the `/speckit.tasks` slash command to create an actionable task list.
+**在聊天中**，使用 `/speckit.tasks` slash command 生成可执行的任务清单。
 
 ```markdown
 /speckit.tasks
 ```
 
-Optionally, validate the plan with `/speckit.analyze`:
+（可选）使用 `/speckit.analyze` 校验计划：
 
 ```markdown
 /speckit.analyze
 ```
 
-Then, use the `/speckit.implement` slash command to execute the plan.
+然后使用 `/speckit.implement` slash command 执行计划。
 
 ```markdown
 /speckit.implement
 ```
 
-## Detailed Example: Building Taskify
+## 详细示例：构建 Taskify
 
-Here's a complete example of building a team productivity platform:
+下面是一个构建团队效率平台的完整示例：
 
-### Step 1: Define Constitution
+### 步骤 1：定义 Constitution
 
-Initialize the project's constitution to set ground rules:
+初始化项目 constitution，设定基础规则：
 
 ```markdown
-/speckit.constitution Taskify is a "Security-First" application. All user inputs must be validated. We use a microservices architecture. Code must be fully documented.
+/speckit.constitution Taskify 是“安全优先（Security-First）”应用。所有用户输入必须校验。采用微服务架构。代码必须有完整文档。
 ```
 
-### Step 2: Define Requirements with `/speckit.specify`
+### 步骤 2：用 `/speckit.specify` 定义需求
 
 ```text
-Develop Taskify, a team productivity platform. It should allow users to create projects, add team members,
-assign tasks, comment and move tasks between boards in Kanban style. In this initial phase for this feature,
-let's call it "Create Taskify," let's have multiple users but the users will be declared ahead of time, predefined.
-I want five users in two different categories, one product manager and four engineers. Let's create three
-different sample projects. Let's have the standard Kanban columns for the status of each task, such as "To Do,"
-"In Progress," "In Review," and "Done." There will be no login for this application as this is just the very
-first testing thing to ensure that our basic features are set up.
+开发 Taskify，一个团队效率平台。它应允许用户创建项目、添加团队成员、分配任务、发表评论，并以看板（Kanban）风格在不同列之间移动任务。在本功能的初始阶段（暂称 “Create Taskify”），我们支持多用户，但用户将预先声明并固定（预置）。
+我需要 5 个用户，分两类：1 个产品经理与 4 个工程师。创建 3 个不同的示例项目。看板列使用标准状态列，例如 “To Do”（待办）、“In Progress”（进行中）、“In Review”（评审中）、“Done”（完成）。该应用不需要登录功能，因为这只是最初的验证，用于确保基础功能搭建完成。
 ```
 
-### Step 3: Refine the Specification
+### 步骤 3：精炼规格说明
 
-Use the `/speckit.clarify` command to interactively resolve any ambiguities in your specification. You can also provide specific details you want to ensure are included.
+使用 `/speckit.clarify` 以交互方式解决规格中的歧义。你也可以提供你希望确保被覆盖的具体细节。
 
 ```bash
-/speckit.clarify I want to clarify the task card details. For each task in the UI for a task card, you should be able to change the current status of the task between the different columns in the Kanban work board. You should be able to leave an unlimited number of comments for a particular card. You should be able to, from that task card, assign one of the valid users.
+/speckit.clarify 我想澄清任务卡片细节：在 UI 中，对每个任务卡片，用户应能在看板的不同列之间切换任务当前状态。用户应能对单张卡片留下不限数量的评论。并且用户应能在任务卡片中将其指派给一个有效用户。
 ```
 
-You can continue to refine the spec with more details using `/speckit.clarify`:
+你可以继续使用 `/speckit.clarify` 补充更多细节来精炼规格：
 
 ```bash
-/speckit.clarify When you first launch Taskify, it's going to give you a list of the five users to pick from. There will be no password required. When you click on a user, you go into the main view, which displays the list of projects. When you click on a project, you open the Kanban board for that project. You're going to see the columns. You'll be able to drag and drop cards back and forth between different columns. You will see any cards that are assigned to you, the currently logged in user, in a different color from all the other ones, so you can quickly see yours. You can edit any comments that you make, but you can't edit comments that other people made. You can delete any comments that you made, but you can't delete comments anybody else made.
+/speckit.clarify 当你第一次启动 Taskify 时，会提供 5 个用户供选择，不需要密码。点击某个用户后进入主视图，显示项目列表；点击项目后打开该项目的看板并看到各列。你可以拖拽卡片在不同列之间移动。分配给当前登录用户的卡片应与其他卡片用不同颜色区分，便于快速识别。你可以编辑自己发表的评论，但不能编辑他人的评论；你可以删除自己发表的评论，但不能删除他人的评论。
 ```
 
-### Step 4: Validate the Spec
+### 步骤 4：校验规格说明
 
-Validate the specification checklist using the `/speckit.checklist` command:
+使用 `/speckit.checklist` 校验规格说明清单：
 
 ```bash
 /speckit.checklist
 ```
 
-### Step 5: Generate Technical Plan with `/speckit.plan`
+### 步骤 5：用 `/speckit.plan` 生成技术计划
 
-Be specific about your tech stack and technical requirements:
+明确你的技术栈与技术要求：
 
 ```bash
-/speckit.plan We are going to generate this using .NET Aspire, using Postgres as the database. The frontend should use Blazor server with drag-and-drop task boards, real-time updates. There should be a REST API created with a projects API, tasks API, and a notifications API.
+/speckit.plan 我们将使用 .NET Aspire 生成该项目，数据库使用 Postgres。前端使用 Blazor Server，支持拖拽看板并实时更新。需要提供 REST API：projects API、tasks API 与 notifications API。
 ```
 
-### Step 6: Validate and Implement
+### 步骤 6：校验并实现
 
-Have your AI agent audit the implementation plan using `/speckit.analyze`:
+让你的 AI agent 使用 `/speckit.analyze` 审计实现计划：
 
 ```bash
 /speckit.analyze
 ```
 
-Finally, implement the solution:
+最后，实现方案：
 
 ```bash
 /speckit.implement
 ```
 
-## Key Principles
+## 关键原则
 
-- **Be explicit** about what you're building and why
-- **Don't focus on tech stack** during specification phase
-- **Iterate and refine** your specifications before implementation
-- **Validate** the plan before coding begins
-- **Let the AI agent handle** the implementation details
+- **明确表达**你要构建什么以及为什么
+- 在规格阶段**不要纠结技术栈**
+- 在实现前**迭代并精炼**你的规格说明
+- 在开始编码前先**校验**计划
+- **让 AI agent 处理**实现细节
 
-## Next Steps
+## 下一步
 
-- Read the [complete methodology](../spec-driven.md) for in-depth guidance
-- Check out [more examples](../templates) in the repository
-- Explore the [source code on GitHub](https://github.com/github/spec-kit)
+- 阅读[完整方法论](../spec-driven.md)获取深入指导
+- 查看仓库中的[更多示例](../templates)
+- 浏览 [GitHub 上的源码](https://github.com/github/spec-kit)

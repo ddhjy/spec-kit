@@ -1,150 +1,147 @@
-# Contributing to Spec Kit
+# 为 Spec Kit 做贡献
 
-Hi there! We're thrilled that you'd like to contribute to Spec Kit. Contributions to this project are [released](https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license) to the public under the [project's open source license](LICENSE).
+你好！我们很高兴你愿意为 Spec Kit 做贡献。对本项目的贡献将依据[项目的开源许可证](LICENSE)对外公开发布（参见 GitHub 服务条款中关于贡献的说明：`https://help.github.com/articles/github-terms-of-service/#6-contributions-under-repository-license`）。
 
-Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+请注意：本项目采用一份[贡献者行为准则](CODE_OF_CONDUCT.md)。参与本项目即表示你同意遵守其中条款。
 
-## Prerequisites for running and testing code
+## 运行与测试代码的前置条件
 
-These are one time installations required to be able to test your changes locally as part of the pull request (PR) submission process.
+以下为一次性安装项，用于在提交 Pull Request（PR）前在本地测试你的改动。
 
-1. Install [Python 3.11+](https://www.python.org/downloads/)
-1. Install [uv](https://docs.astral.sh/uv/) for package management
-1. Install [Git](https://git-scm.com/downloads)
-1. Have an [AI coding agent available](README.md#-supported-ai-agents)
+1. 安装 [Python 3.11+](https://www.python.org/downloads/)
+1. 安装 [uv](https://docs.astral.sh/uv/) 作为包管理工具
+1. 安装 [Git](https://git-scm.com/downloads)
+1. 准备一个可用的 [AI coding agent](README.md#-supported-ai-agents)
 
 <details>
-<summary><b>💡 Hint if you are using <code>VSCode</code> or <code>GitHub Codespaces</code> as your IDE</b></summary>
+<summary><b>💡 如果你使用 <code>VSCode</code> 或 <code>GitHub Codespaces</code> 作为 IDE 的提示</b></summary>
 
 <br>
 
-Provided you have [Docker](https://docker.com) installed on your machine, you can leverage [Dev Containers](https://containers.dev) through this [VSCode extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers), to easily set up your development environment, with aforementioned tools already installed and configured, thanks to the `.devcontainer/devcontainer.json` file (located at the root of the project).
+只要你的机器安装了 [Docker](https://docker.com)，你就可以通过这个 [VSCode 扩展](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) 来使用 [Dev Containers](https://containers.dev)，借助项目根目录的 `.devcontainer/devcontainer.json`，快速搭建开发环境（上述工具已预装并完成配置）。
 
-To do so, simply:
+操作步骤如下：
 
-- Checkout the repo
-- Open it with VSCode
-- Open the [Command Palette](https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette) and select "Dev Containers: Open Folder in Container..."
+- 检出（checkout）仓库
+- 用 VSCode 打开
+- 打开 [命令面板](https://code.visualstudio.com/docs/getstarted/userinterface#_command-palette)，选择 “Dev Containers: Open Folder in Container...”
 
-On [GitHub Codespaces](https://github.com/features/codespaces) it's even simpler, as it leverages the `.devcontainer/devcontainer.json` automatically upon opening the codespace.
+如果你使用 [GitHub Codespaces](https://github.com/features/codespaces)，则更简单：打开 codespace 时会自动使用 `.devcontainer/devcontainer.json`。
 
 </details>
 
-## Submitting a pull request
+## 提交 Pull Request
 
 > [!NOTE]
-> If your pull request introduces a large change that materially impacts the work of the CLI or the rest of the repository (e.g., you're introducing new templates, arguments, or otherwise major changes), make sure that it was **discussed and agreed upon** by the project maintainers. Pull requests with large changes that did not have a prior conversation and agreement will be closed.
+> 如果你的 PR 引入了会显著影响 CLI 或仓库其他部分的大改动（例如新增模板、参数或其他重大变更），请确保已经与项目维护者**提前沟通并达成一致**。未提前沟通且包含重大变更的 PR 可能会被关闭。
 
-1. Fork and clone the repository
-1. Configure and install the dependencies: `uv sync`
-1. Make sure the CLI works on your machine: `uv run specify --help`
-1. Create a new branch: `git checkout -b my-branch-name`
-1. Make your change, add tests, and make sure everything still works
-1. Test the CLI functionality with a sample project if relevant
-1. Push to your fork and submit a pull request
-1. Wait for your pull request to be reviewed and merged.
+1. 派生（fork）并克隆（clone）仓库
+1. 配置并安装依赖：`uv sync`
+1. 确认 CLI 在你的机器上可用：`uv run specify --help`
+1. 创建新分支：`git checkout -b my-branch-name`
+1. 完成修改、补充测试，并确保一切仍然正常
+1. 若相关，请用示例项目测试 CLI 功能
+1. Push 到你的 fork 并提交 Pull Request
+1. 等待 PR 被审阅与合并
 
-Here are a few things you can do that will increase the likelihood of your pull request being accepted:
+以下做法会提高你的 PR 被接受的概率：
 
-- Follow the project's coding conventions.
-- Write tests for new functionality.
-- Update documentation (`README.md`, `spec-driven.md`) if your changes affect user-facing features.
-- Keep your change as focused as possible. If there are multiple changes you would like to make that are not dependent upon each other, consider submitting them as separate pull requests.
-- Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
-- Test your changes with the Spec-Driven Development workflow to ensure compatibility.
+- 遵循项目的编码规范。
+- 为新功能编写测试。
+- 如果你的修改影响用户可见功能，请同步更新文档（`README.md`、`spec-driven.md`）。
+- 尽量保持修改聚焦。如果你有多个互不依赖的改动，建议拆分成多个 PR 提交。
+- 写一个[好的 commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)。
+- 用规格驱动开发（SDD）工作流验证你的改动，确保兼容性。
 
-## Development workflow
+## 开发工作流
 
-When working on spec-kit:
+在开发 spec-kit 时：
 
-1. Test changes with the `specify` CLI commands (`/speckit.specify`, `/speckit.plan`, `/speckit.tasks`) in your coding agent of choice
-2. Verify templates are working correctly in `templates/` directory
-3. Test script functionality in the `scripts/` directory
-4. Ensure memory files (`memory/constitution.md`) are updated if major process changes are made
+1. 使用你选择的 coding agent，在 `specify` CLI 命令（`/speckit.specify`、`/speckit.plan`、`/speckit.tasks`）下测试改动
+2. 验证 `templates/` 目录中的模板是否能正常工作
+3. 测试 `scripts/` 目录下脚本功能
+4. 若流程有重大变化，确保更新记忆文件（`memory/constitution.md`）
 
-### Testing template and command changes locally
+### 在本地测试模板与命令改动
 
-Running `uv run specify init` pulls released packages, which won’t include your local changes.  
-To test your templates, commands, and other changes locally, follow these steps:
+运行 `uv run specify init` 会拉取已发布的包，其中不包含你的本地改动。  
+要在本地测试模板、命令与其他改动，请按以下步骤操作：
 
-1. **Create release packages**
+1. **创建 release 包**
 
-   Run the following command to generate the local packages:
+   运行以下命令生成本地包：
 
    ```bash
    ./.github/workflows/scripts/create-release-packages.sh v1.0.0
    ```
 
-2. **Copy the relevant package to your test project**
+2. **将相关包复制到你的测试项目**
 
    ```bash
    cp -r .genreleases/sdd-copilot-package-sh/. <path-to-test-project>/
    ```
 
-3. **Open and test the agent**
+3. **打开并测试 agent**
 
-   Navigate to your test project folder and open the agent to verify your implementation.
+   进入测试项目目录并打开 agent，验证你的实现。
 
-## AI contributions in Spec Kit
+## Spec Kit 中的 AI 辅助贡献
 
 > [!IMPORTANT]
 >
-> If you are using **any kind of AI assistance** to contribute to Spec Kit,
-> it must be disclosed in the pull request or issue.
+> 如果你在为 Spec Kit 做贡献时使用了**任何形式的 AI 辅助**，
+> 必须在 PR 或 issue 中进行披露（说明）。
 
-We welcome and encourage the use of AI tools to help improve Spec Kit! Many valuable contributions have been enhanced with AI assistance for code generation, issue detection, and feature definition.
+我们欢迎并鼓励使用 AI 工具来改进 Spec Kit！很多有价值的贡献都借助了 AI（例如用于代码生成、问题定位、功能定义等）。
 
-That being said, if you are using any kind of AI assistance (e.g., agents, ChatGPT) while contributing to Spec Kit,
-**this must be disclosed in the pull request or issue**, along with the extent to which AI assistance was used (e.g., documentation comments vs. code generation).
+不过，如果你在贡献过程中使用了任何 AI 辅助（例如 agents、ChatGPT），
+**必须在 PR 或 issue 中披露**，并说明 AI 使用的范围与程度（例如仅用于文档注释 vs. 参与代码生成）。
 
-If your PR responses or comments are being generated by an AI, disclose that as well.
+如果你的 PR 回复或评论是由 AI 生成的，也请一并披露。
 
-As an exception, trivial spacing or typo fixes don't need to be disclosed, so long as the changes are limited to small parts of the code or short phrases.
+作为例外：仅涉及非常小的空格/拼写修复且改动范围仅限于少量代码或短语时，无需披露。
 
-An example disclosure:
+披露示例：
 
-> This PR was written primarily by GitHub Copilot.
+> 本 PR 主要由 GitHub Copilot 编写。
 
-Or a more detailed disclosure:
+或更详细的披露：
 
-> I consulted ChatGPT to understand the codebase but the solution
-> was fully authored manually by myself.
+> 我借助 ChatGPT 来理解代码库，但最终方案完全由我本人手工编写。
 
-Failure to disclose this is first and foremost rude to the human operators on the other end of the pull request, but it also makes it difficult to
-determine how much scrutiny to apply to the contribution.
+不披露首先是对 PR 另一端的人工审阅者不尊重；同时也会让维护者难以判断该贡献需要多大程度的审查。
 
-In a perfect world, AI assistance would produce equal or higher quality work than any human. That isn't the world we live in today, and in most cases
-where human supervision or expertise is not in the loop, it's generating code that cannot be reasonably maintained or evolved.
+在理想世界里，AI 辅助可以产出不低于任何人类的高质量成果。但现实并非如此：在多数缺少人类监督或专业能力兜底的情况下，AI 很可能生成难以维护或演进的代码。
 
-### What we're looking for
+### 我们希望看到什么
 
-When submitting AI-assisted contributions, please ensure they include:
+提交 AI 辅助的贡献时，请确保包含：
 
-- **Clear disclosure of AI use** - You are transparent about AI use and degree to which you're using it for the contribution
-- **Human understanding and testing** - You've personally tested the changes and understand what they do
-- **Clear rationale** - You can explain why the change is needed and how it fits within Spec Kit's goals
-- **Concrete evidence** - Include test cases, scenarios, or examples that demonstrate the improvement
-- **Your own analysis** - Share your thoughts on the end-to-end developer experience
+- **清晰披露 AI 使用情况**：明确说明是否使用 AI、以及使用程度
+- **人类理解与测试**：你亲自测试过改动，并理解其行为
+- **清楚的动机与理由**：你能解释为什么需要该改动，以及它如何符合 Spec Kit 的目标
+- **具体证据**：提供测试用例、场景或示例来证明改进效果
+- **你自己的分析**：分享你对端到端开发者体验的观察与想法
 
-### What we'll close
+### 我们会关闭什么样的贡献
 
-We reserve the right to close contributions that appear to be:
+我们保留关闭以下类型贡献的权利：
 
-- Untested changes submitted without verification
-- Generic suggestions that don't address specific Spec Kit needs
-- Bulk submissions that show no human review or understanding
+- 未经测试/验证的改动
+- 不能解决 Spec Kit 具体需求的泛泛建议
+- 大批量提交但看不出有人类审阅与理解的改动
 
-### Guidelines for success
+### 成功提交的建议
 
-The key is demonstrating that you understand and have validated your proposed changes. If a maintainer can easily tell that a contribution was generated entirely by AI without human input or testing, it likely needs more work before submission.
+关键在于证明：你理解并验证了你提出的改动。如果维护者很容易看出贡献是纯 AI 生成且缺少人类输入或测试，那么它大概率需要在提交前做更多工作。
 
-Contributors who consistently submit low-effort AI-generated changes may be restricted from further contributions at the maintainers' discretion.
+持续提交低投入、低质量的 AI 生成改动的贡献者，可能会被维护者酌情限制后续贡献权限。
 
-Please be respectful to maintainers and disclose AI assistance.
+请尊重维护者，并披露 AI 使用情况。
 
-## Resources
+## 资源
 
-- [Spec-Driven Development Methodology](./spec-driven.md)
-- [How to Contribute to Open Source](https://opensource.guide/how-to-contribute/)
-- [Using Pull Requests](https://help.github.com/articles/about-pull-requests/)
-- [GitHub Help](https://help.github.com)
+- [规格驱动开发（SDD）方法论](./spec-driven.md)
+- [如何为开源做贡献](https://opensource.guide/how-to-contribute/)
+- [如何使用 Pull Request](https://help.github.com/articles/about-pull-requests/)
+- [GitHub 帮助](https://help.github.com)

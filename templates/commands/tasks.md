@@ -1,48 +1,48 @@
 ---
-description: Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts.
+description: 基于现有设计产物，为该功能生成可执行、按依赖排序的 tasks.md。
 handoffs: 
-  - label: Analyze For Consistency
+  - label: 一致性分析
     agent: speckit.analyze
-    prompt: Run a project analysis for consistency
+    prompt: 请运行跨产物一致性分析
     send: true
-  - label: Implement Project
+  - label: 开始实现
     agent: speckit.implement
-    prompt: Start the implementation in phases
+    prompt: 请按阶段开始实现
     send: true
 scripts:
   sh: scripts/bash/check-prerequisites.sh --json
   ps: scripts/powershell/check-prerequisites.ps1 -Json
 ---
 
-## User Input
+## 用户输入
 
 ```text
 $ARGUMENTS
 ```
 
-You **MUST** consider the user input before proceeding (if not empty).
+在继续之前，你 **必须** 先考虑用户输入（如果不为空）。
 
-## Outline
+## 大纲
 
-1. **Setup**: Run `{SCRIPT}` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. **准备**：在仓库根目录运行 `{SCRIPT}`，并解析 FEATURE_DIR 与 AVAILABLE_DOCS 列表。所有路径必须是绝对路径。参数中若包含单引号（例如 "I'm Groot"），请使用转义：例如 'I'\''m Groot'（或尽量用双引号："I'm Groot"）。
 
-2. **Load design documents**: Read from FEATURE_DIR:
-   - **Required**: plan.md (tech stack, libraries, structure), spec.md (user stories with priorities)
-   - **Optional**: data-model.md (entities), contracts/ (API endpoints), research.md (decisions), quickstart.md (test scenarios)
-   - Note: Not all projects have all documents. Generate tasks based on what's available.
+2. **加载设计文档**：从 FEATURE_DIR 读取：
+   - **必需**：plan.md（技术栈、依赖、结构）、spec.md（带优先级的用户故事）
+   - **可选**：data-model.md（实体）、contracts/（API 端点）、research.md（技术决策）、quickstart.md（测试场景）
+   - 注意：并非所有项目都有全部文档；请基于现有内容生成 tasks。
 
-3. **Execute task generation workflow**:
-   - Load plan.md and extract tech stack, libraries, project structure
-   - Load spec.md and extract user stories with their priorities (P1, P2, P3, etc.)
-   - If data-model.md exists: Extract entities and map to user stories
-   - If contracts/ exists: Map endpoints to user stories
-   - If research.md exists: Extract decisions for setup tasks
-   - Generate tasks organized by user story (see Task Generation Rules below)
-   - Generate dependency graph showing user story completion order
-   - Create parallel execution examples per user story
-   - Validate task completeness (each user story has all needed tasks, independently testable)
+3. **执行任务生成工作流**：
+   - 读取 plan.md 并提取技术栈、依赖与项目结构
+   - 读取 spec.md 并提取用户故事及其优先级（P1、P2、P3……）
+   - 若存在 data-model.md：提取实体并映射到用户故事
+   - 若存在 contracts/：将端点映射到用户故事
+   - 若存在 research.md：提取决策以生成准备阶段任务
+   - 按用户故事组织任务（见下方“任务生成规则”）
+   - 生成依赖图，展示用户故事完成顺序
+   - 为每个用户故事生成并行执行示例
+   - 校验任务完整性（每个用户故事都有所需任务，且可独立测试）
 
-4. **Generate tasks.md**: Use `templates/tasks-template.md` as structure, fill with:
+4. **生成 tasks.md**：以 `templates/tasks-template.md` 为结构，填充：
    - Correct feature name from plan.md
    - Phase 1: Setup tasks (project initialization)
    - Phase 2: Foundational tasks (blocking prerequisites for all user stories)
@@ -55,7 +55,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Parallel execution examples per story
    - Implementation strategy section (MVP first, incremental delivery)
 
-5. **Report**: Output path to generated tasks.md and summary:
+5. **汇报**：输出生成的 tasks.md 路径与摘要：
    - Total task count
    - Task count per user story
    - Parallel opportunities identified
@@ -63,17 +63,17 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Suggested MVP scope (typically just User Story 1)
    - Format validation: Confirm ALL tasks follow the checklist format (checkbox, ID, labels, file paths)
 
-Context for task generation: {ARGS}
+任务生成的上下文：{ARGS}
 
-The tasks.md should be immediately executable - each task must be specific enough that an LLM can complete it without additional context.
+生成的 tasks.md 应可立即执行——每个任务都必须足够具体，使 LLM 在无需额外上下文的情况下也能完成。
 
-## Task Generation Rules
+## 任务生成规则
 
-**CRITICAL**: Tasks MUST be organized by user story to enable independent implementation and testing.
+**关键**：任务必须按用户故事组织，以支持独立实现与独立测试。
 
-**Tests are OPTIONAL**: Only generate test tasks if explicitly requested in the feature specification or if user requests TDD approach.
+**测试是可选的**：仅当功能规格明确要求测试，或用户要求 TDD 时才生成测试任务。
 
-### Checklist Format (REQUIRED)
+### 清单格式（必需）
 
 Every task MUST strictly follow this format:
 
@@ -81,18 +81,18 @@ Every task MUST strictly follow this format:
 - [ ] [TaskID] [P?] [Story?] Description with file path
 ```
 
-**Format Components**:
+**格式组成**：
 
-1. **Checkbox**: ALWAYS start with `- [ ]` (markdown checkbox)
-2. **Task ID**: Sequential number (T001, T002, T003...) in execution order
-3. **[P] marker**: Include ONLY if task is parallelizable (different files, no dependencies on incomplete tasks)
-4. **[Story] label**: REQUIRED for user story phase tasks only
-   - Format: [US1], [US2], [US3], etc. (maps to user stories from spec.md)
-   - Setup phase: NO story label
-   - Foundational phase: NO story label  
-   - User Story phases: MUST have story label
-   - Polish phase: NO story label
-5. **Description**: Clear action with exact file path
+1. **复选框**：必须以 `- [ ]` 开头（Markdown checkbox）
+2. **任务 ID**：按执行顺序编号（T001、T002、T003……）
+3. **[P] 标记**：仅在任务可并行时使用（不同文件，且不依赖未完成任务）
+4. **[Story] 标签**：仅用于用户故事阶段任务，并且是必需的
+   - 格式：[US1]、[US2]、[US3]……（映射到 spec.md 的用户故事）
+   - 准备阶段：不写 story 标签
+   - 基础设施阶段：不写 story 标签
+   - 用户故事阶段：必须写 story 标签
+   - 打磨阶段：不写 story 标签
+5. **描述**：清晰动作 + 精确文件路径
 
 **Examples**:
 

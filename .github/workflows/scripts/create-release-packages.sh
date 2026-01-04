@@ -1,29 +1,29 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# create-release-packages.sh (workflow-local)
-# Build Spec Kit template release archives for each supported AI assistant and script type.
-# Usage: .github/workflows/scripts/create-release-packages.sh <version>
-#   Version argument should include leading 'v'.
-#   Optionally set AGENTS and/or SCRIPTS env vars to limit what gets built.
-#     AGENTS  : space or comma separated subset of: claude gemini copilot cursor-agent qwen opencode windsurf codex amp shai bob (default: all)
-#     SCRIPTS : space or comma separated subset of: sh ps (default: both)
-#   Examples:
+# create-release-packages.sh（工作流内部脚本）
+# 为每个已支持的 AI assistant 与脚本类型构建 Spec Kit 模板的 release 压缩包。
+# 用法：.github/workflows/scripts/create-release-packages.sh <version>
+#   version 参数必须带前缀 'v'。
+#   可选：设置 AGENTS 和/或 SCRIPTS 环境变量，以限制构建范围。
+#     AGENTS  : 以空格或逗号分隔的子集：claude gemini copilot cursor-agent qwen opencode windsurf codex amp shai bob（默认：全部）
+#     SCRIPTS : 以空格或逗号分隔的子集：sh ps（默认：两者）
+#   示例：
 #     AGENTS=claude SCRIPTS=sh $0 v0.2.0
 #     AGENTS="copilot,gemini" $0 v0.2.0
 #     SCRIPTS=ps $0 v0.2.0
 
 if [[ $# -ne 1 ]]; then
-  echo "Usage: $0 <version-with-v-prefix>" >&2
+  echo "用法：$0 <version-with-v-prefix>" >&2
   exit 1
 fi
 NEW_VERSION="$1"
 if [[ ! $NEW_VERSION =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-  echo "Version must look like v0.0.0" >&2
+  echo "版本号格式必须类似 v0.0.0" >&2
   exit 1
 fi
 
-echo "Building release packages for $NEW_VERSION"
+echo "正在为 $NEW_VERSION 构建 release 包"
 
 # Create and use .genreleases directory for all build artifacts
 GENRELEASES_DIR=".genreleases"
@@ -53,7 +53,7 @@ generate_commands() {
     script_command=$(printf '%s\n' "$file_content" | awk -v sv="$script_variant" '/^[[:space:]]*'"$script_variant"':[[:space:]]*/ {sub(/^[[:space:]]*'"$script_variant"':[[:space:]]*/, ""); print; exit}')
     
     if [[ -z $script_command ]]; then
-      echo "Warning: no script command found for $script_variant in $template" >&2
+      echo "警告：在 $template 中未找到 $script_variant 对应的脚本命令" >&2
       script_command="(Missing script command for $script_variant)"
     fi
     
@@ -124,33 +124,33 @@ EOF
 build_variant() {
   local agent=$1 script=$2
   local base_dir="$GENRELEASES_DIR/sdd-${agent}-package-${script}"
-  echo "Building $agent ($script) package..."
+  echo "正在构建 $agent（$script）包..."
   mkdir -p "$base_dir"
   
   # Copy base structure but filter scripts by variant
   SPEC_DIR="$base_dir/.specify"
   mkdir -p "$SPEC_DIR"
   
-  [[ -d memory ]] && { cp -r memory "$SPEC_DIR/"; echo "Copied memory -> .specify"; }
+  [[ -d memory ]] && { cp -r memory "$SPEC_DIR/"; echo "已复制 memory -> .specify"; }
   
   # Only copy the relevant script variant directory
   if [[ -d scripts ]]; then
     mkdir -p "$SPEC_DIR/scripts"
     case $script in
       sh)
-        [[ -d scripts/bash ]] && { cp -r scripts/bash "$SPEC_DIR/scripts/"; echo "Copied scripts/bash -> .specify/scripts"; }
+        [[ -d scripts/bash ]] && { cp -r scripts/bash "$SPEC_DIR/scripts/"; echo "已复制 scripts/bash -> .specify/scripts"; }
         # Copy any script files that aren't in variant-specific directories
         find scripts -maxdepth 1 -type f -exec cp {} "$SPEC_DIR/scripts/" \; 2>/dev/null || true
         ;;
       ps)
-        [[ -d scripts/powershell ]] && { cp -r scripts/powershell "$SPEC_DIR/scripts/"; echo "Copied scripts/powershell -> .specify/scripts"; }
+        [[ -d scripts/powershell ]] && { cp -r scripts/powershell "$SPEC_DIR/scripts/"; echo "已复制 scripts/powershell -> .specify/scripts"; }
         # Copy any script files that aren't in variant-specific directories
         find scripts -maxdepth 1 -type f -exec cp {} "$SPEC_DIR/scripts/" \; 2>/dev/null || true
         ;;
     esac
   fi
   
-  [[ -d templates ]] && { mkdir -p "$SPEC_DIR/templates"; find templates -type f -not -path "templates/commands/*" -not -name "vscode-settings.json" -exec cp --parents {} "$SPEC_DIR"/ \; ; echo "Copied templates -> .specify/templates"; }
+  [[ -d templates ]] && { mkdir -p "$SPEC_DIR/templates"; find templates -type f -not -path "templates/commands/*" -not -name "vscode-settings.json" -exec cp --parents {} "$SPEC_DIR"/ \; ; echo "已复制 templates -> .specify/templates"; }
   
   # NOTE: We substitute {ARGS} internally. Outward tokens differ intentionally:
   #   * Markdown/prompt (claude, copilot, cursor-agent, opencode): $ARGUMENTS
@@ -219,7 +219,7 @@ build_variant() {
       generate_commands bob md "\$ARGUMENTS" "$base_dir/.bob/commands" "$script" ;;
   esac
   ( cd "$base_dir" && zip -r "../spec-kit-template-${agent}-${script}-${NEW_VERSION}.zip" . )
-  echo "Created $GENRELEASES_DIR/spec-kit-template-${agent}-${script}-${NEW_VERSION}.zip"
+  echo "已创建 $GENRELEASES_DIR/spec-kit-template-${agent}-${script}-${NEW_VERSION}.zip"
 }
 
 # Determine agent list
@@ -259,8 +259,8 @@ else
   SCRIPT_LIST=("${ALL_SCRIPTS[@]}")
 fi
 
-echo "Agents: ${AGENT_LIST[*]}"
-echo "Scripts: ${SCRIPT_LIST[*]}"
+echo "Agents：${AGENT_LIST[*]}"
+echo "脚本类型：${SCRIPT_LIST[*]}"
 
 for agent in "${AGENT_LIST[@]}"; do
   for script in "${SCRIPT_LIST[@]}"; do
@@ -268,6 +268,6 @@ for agent in "${AGENT_LIST[@]}"; do
   done
 done
 
-echo "Archives in $GENRELEASES_DIR:"
+echo "$GENRELEASES_DIR 中的压缩包："
 ls -1 "$GENRELEASES_DIR"/spec-kit-template-*-"${NEW_VERSION}".zip
 

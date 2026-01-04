@@ -1,31 +1,31 @@
-# Security Policy
+# 安全策略
 
-Thanks for helping make GitHub safe for everyone.
+感谢你帮助让 GitHub 对所有人都更安全。
 
-GitHub takes the security of our software products and services seriously, including all of the open source code repositories managed through our GitHub organizations, such as [GitHub](https://github.com/GitHub).
+GitHub 非常重视自身软件产品与服务的安全性，也包括由 GitHub 组织（例如 [GitHub](https://github.com/GitHub)）管理的所有开源代码仓库。
 
-Even though [open source repositories are outside of the scope of our bug bounty program](https://bounty.github.com/index.html#scope) and therefore not eligible for bounty rewards, we will ensure that your finding gets passed along to the appropriate maintainers for remediation.
+尽管[开源仓库不在我们的漏洞赏金计划范围内](https://bounty.github.com/index.html#scope)，因此不符合赏金奖励条件，我们仍会确保你的发现被转达给相应维护者进行修复。
 
-## Reporting Security Issues
+## 报告安全问题
 
-If you believe you have found a security vulnerability in any GitHub-owned repository, please report it to us through coordinated disclosure.
+如果你认为在任何 GitHub 所拥有的仓库中发现了安全漏洞，请通过协调披露（coordinated disclosure）的方式向我们报告。
 
-**Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.**
+**请不要通过公开的 GitHub issue、discussion 或 pull request 报告安全漏洞。**
 
-Instead, please send an email to opensource-security[@]github.com.
+请改为发送邮件至 opensource-security[@]github.com。
 
-Please include as much of the information listed below as you can to help us better understand and resolve the issue:
+为帮助我们更好地理解与解决问题，请尽量包含以下信息：
 
-- The type of issue (e.g., buffer overflow, SQL injection, or cross-site scripting)
-- Full paths of source file(s) related to the manifestation of the issue
-- The location of the affected source code (tag/branch/commit or direct URL)
-- Any special configuration required to reproduce the issue
-- Step-by-step instructions to reproduce the issue
-- Proof-of-concept or exploit code (if possible)
-- Impact of the issue, including how an attacker might exploit the issue
+- 问题类型（例如缓冲区溢出、SQL 注入、跨站脚本 XSS）
+- 与问题表现相关的源文件完整路径
+- 受影响源代码的位置（tag/branch/commit 或直接 URL）
+- 复现问题所需的特殊配置
+- 复现步骤（逐步）
+- PoC 或利用代码（如可提供）
+- 问题影响，包括攻击者可能如何利用该漏洞
 
-This information will help us triage your report more quickly.
+这些信息有助于我们更快地对你的报告进行分级与处理。
 
-## Policy
+## 政策
 
-See [GitHub's Safe Harbor Policy](https://docs.github.com/en/site-policy/security-policies/github-bug-bounty-program-legal-safe-harbor#1-safe-harbor-terms)
+参阅 [GitHub Safe Harbor Policy](https://docs.github.com/en/site-policy/security-policies/github-bug-bounty-program-legal-safe-harbor#1-safe-harbor-terms)。

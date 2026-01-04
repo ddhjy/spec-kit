@@ -2,17 +2,17 @@
 set -euo pipefail
 
 # create-github-release.sh
-# Create a GitHub release with all template zip files
-# Usage: create-github-release.sh <version>
+# 使用所有模板 zip 文件创建 GitHub release
+# 用法：create-github-release.sh <version>
 
 if [[ $# -ne 1 ]]; then
-  echo "Usage: $0 <version>" >&2
+  echo "用法：$0 <version>" >&2
   exit 1
 fi
 
 VERSION="$1"
 
-# Remove 'v' prefix from version for release title
+# release 标题中移除版本号的 'v' 前缀
 VERSION_NO_V=${VERSION#v}
 
 gh release create "$VERSION" \
@@ -50,5 +50,5 @@ gh release create "$VERSION" \
   .genreleases/spec-kit-template-q-ps-"$VERSION".zip \
   .genreleases/spec-kit-template-bob-sh-"$VERSION".zip \
   .genreleases/spec-kit-template-bob-ps-"$VERSION".zip \
-  --title "Spec Kit Templates - $VERSION_NO_V" \
+  --title "Spec Kit 模板 - $VERSION_NO_V" \
   --notes-file release_notes.md

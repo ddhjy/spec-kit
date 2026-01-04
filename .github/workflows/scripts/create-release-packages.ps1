@@ -3,22 +3,22 @@
 
 <#
 .SYNOPSIS
-    Build Spec Kit template release archives for each supported AI assistant and script type.
+    为每个已支持的 AI assistant 与脚本类型构建 Spec Kit 模板的 release 压缩包。
 
 .DESCRIPTION
-    create-release-packages.ps1 (workflow-local)
-    Build Spec Kit template release archives for each supported AI assistant and script type.
+    create-release-packages.ps1（工作流内部脚本）
+    为每个已支持的 AI assistant 与脚本类型构建 Spec Kit 模板的 release 压缩包。
     
 .PARAMETER Version
-    Version string with leading 'v' (e.g., v0.2.0)
+    带前缀 'v' 的版本字符串（例如 v0.2.0）
 
 .PARAMETER Agents
-    Comma or space separated subset of agents to build (default: all)
-    Valid agents: claude, gemini, copilot, cursor-agent, qwen, opencode, windsurf, codex, kilocode, auggie, roo, codebuddy, amp, q, bob, qoder
+    以逗号或空格分隔的 agent 子集（默认：全部）
+    合法 agent：claude、gemini、copilot、cursor-agent、qwen、opencode、windsurf、codex、kilocode、auggie、roo、codebuddy、amp、q、bob、qoder
 
 .PARAMETER Scripts
-    Comma or space separated subset of script types to build (default: both)
-    Valid scripts: sh, ps
+    以逗号或空格分隔的脚本类型子集（默认：两者）
+    合法脚本类型：sh、ps
 
 .EXAMPLE
     .\create-release-packages.ps1 -Version v0.2.0
@@ -45,11 +45,11 @@ $ErrorActionPreference = "Stop"
 
 # Validate version format
 if ($Version -notmatch '^v\d+\.\d+\.\d+$') {
-    Write-Error "Version must look like v0.0.0"
+    Write-Error "版本号格式必须类似 v0.0.0"
     exit 1
 }
 
-Write-Host "Building release packages for $Version"
+Write-Host "正在为 $Version 构建 release 包"
 
 # Create and use .genreleases directory for all build artifacts
 $GenReleasesDir = ".genreleases"

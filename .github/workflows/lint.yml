@@ -1,4 +1,4 @@
-name: Lint
+name: 规范检查（Lint）
 permissions:
   contents: read
 
@@ -11,10 +11,10 @@ jobs:
   markdownlint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: Run markdownlint-cli2
+      - name: 运行 markdownlint-cli2
         uses: DavidAnson/markdownlint-cli2-action@v19
         with:
           globs: '**/*.md'

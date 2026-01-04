@@ -1,19 +1,19 @@
-# Support
+# 支持
 
-## How to file issues and get help
+## 如何提 issue 与获取帮助
 
-This project uses GitHub issues to track bugs and feature requests. Please search the existing issues before filing new issues to avoid duplicates. For new issues, file your bug or feature request as a new issue.
+本项目使用 GitHub issues 来跟踪 bug 与功能请求。提交新 issue 之前，请先搜索现有 issue，避免重复。若需要提新问题，请新建一个 issue 来描述你的 bug 或功能需求。
 
-For help or questions about using this project, please:
+如需帮助或对项目使用有疑问，请：
 
-- Open a [GitHub issue](https://github.com/github/spec-kit/issues/new) for bug reports, feature requests, or questions about the Spec-Driven Development methodology
-- Check the [comprehensive guide](./spec-driven.md) for detailed documentation on the Spec-Driven Development process
-- Review the [README](./README.md) for getting started instructions and troubleshooting tips
+- 新建一个 [GitHub issue](https://github.com/github/spec-kit/issues/new)，用于提交 bug、功能请求，或询问规格驱动开发（SDD）方法论相关问题
+- 查看[完整指南](./spec-driven.md)，获取 SDD 流程的详细文档
+- 阅读 [README](./README.md) 获取快速开始与故障排查提示
 
-## Project Status
+## 项目状态
 
-**Spec Kit** is under active development and maintained by GitHub staff **AND THE COMMUNITY**. We will do our best to respond to support, feature requests, and community questions in a timely manner.
+**Spec Kit** 正在积极开发中，由 GitHub 员工**与社区**共同维护。我们会尽力及时响应支持请求、功能请求与社区问题。
 
-## GitHub Support Policy
+## GitHub 支持政策
 
-Support for this project is limited to the resources listed above.
+对本项目的支持范围仅限于以上列出的资源与渠道。
